@@ -31,8 +31,9 @@ link "$REPO/skills" "$HOME/.agents/skills"
 # AGENTS.md:两个工具全局路径不同，各链一份（各读一次，不重复）
 link "$REPO/AGENTS.md" "$HOME/.codex/AGENTS.md"
 link "$REPO/AGENTS.md" "$HOME/.config/opencode/AGENTS.md"
+link "$REPO/AGENTS.md" "$HOME/.claude/CLAUDE.md"
 
 echo
-echo "完成。config 自行手动配置："
+echo "完成。config 请自行手动配置："
 echo "  ~/.codex/config.toml"
 echo "  ~/.config/opencode/opencode.json"

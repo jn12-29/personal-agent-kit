@@ -1,0 +1,1 @@
+npx skills add OthmanAdi/planning-with-files --skill planning-with-files -g
