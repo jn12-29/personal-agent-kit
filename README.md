@@ -38,3 +38,17 @@ If you use the included model provider examples, add this to `~/.bashrc` or `~/.
 ```bash
 export CCH_API_KEY=""
 ```
+
+Or append it directly.
+
+Bash:
+
+```bash
+printf '\nexport CCH_API_KEY=""\n' >> ~/.bashrc
+```
+
+Zsh:
+
+```bash
+printf '\nexport CCH_API_KEY=""\n' >> ~/.zshrc
+```
