@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # 把 personal-agent-kit 的 skills 和 AGENTS.md symlink 到 Codex / OpenCode 的加载位置。
-# config 不处理:~/.codex/config.toml 与 ~/.config/opencode/opencode.json 自行手动配置。
+# Config is handled separately by scripts/install-config.sh.
 set -euo pipefail
 
 REPO="${AGENT_KIT_DIR:-$HOME/personal-agent-kit}"
@@ -34,6 +34,5 @@ link "$REPO/AGENTS.md" "$HOME/.config/opencode/AGENTS.md"
 link "$REPO/AGENTS.md" "$HOME/.claude/CLAUDE.md"
 
 echo
-echo "完成。config 请自行手动配置："
-echo "  ~/.codex/config.toml"
-echo "  ~/.config/opencode/opencode.json"
+echo "完成。config 可用脚本覆盖安装（会先备份已有文件）："
+echo "  bash \"$REPO/scripts/install-config.sh\""
