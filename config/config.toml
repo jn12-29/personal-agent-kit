@@ -1,0 +1,27 @@
+model_provider = "cch"
+model = "gpt-5.5"
+model_reasoning_effort = "xhigh"
+personality = "pragmatic"
+approvals_reviewer = "guardian_subagent"
+sandbox_mode = "danger-full-access"
+approval_policy = "never"
+
+
+[model_providers.cch]
+name = "cch"
+base_url = "https://cx.aiserverai.online/v1"
+wire_api = "responses"
+env_key = "CCH_API_KEY"
+requires_openai_auth = true
+
+[tui]
+status_line = ["model-with-reasoning", "current-dir", "context-used", "five-hour-limit", "weekly-limit", "context-window-size", "used-tokens", "total-input-tokens", "total-output-tokens", "run-state"]
+status_line_use_colors = true
+
+[tui.model_availability_nux]
+"gpt-5.5" = 4
+
+[features]
+remote_control = true
+terminal_resize_reflow = true
+goals = true

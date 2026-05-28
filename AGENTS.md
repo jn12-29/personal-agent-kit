@@ -67,37 +67,45 @@ For multi-step tasks, state a brief plan:
 
 Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
 
-## 5. Documentation Hygiene
+## 5. Documentation hygiene
 
-When editing documentation, write the final desired state only.
+Treat docs as the source of truth for the _current_ design, not a changelog.
+Write the final desired state only — no migration notes, deprecated names, or explanations of removed behavior unless explicitly asked; put historical context in the chat reply instead.
+Before finishing a docs edit, grep the file for obsolete terms and remove them.
 
-Do not include:
+## 6. Code organization
 
-- Legacy design explanations
-- Deprecated parameter names
-- Old-vs-new migration notes unless explicitly requested
-- Explanations of why something was removed
-- Placeholder examples that mention removed options
-- Warnings about designs that no longer exist
+- One file, one responsibility — split when a file mixes concerns or grows unwieldy (~300 lines is a useful trigger, not a hard limit).
+- Keep module-level state explicit: configure it through a setter, not hidden cross-module globals, so behavior stays predictable and testable.
+- After extracting a module, verify it still imports/builds before moving on.
+- Project-specific (e.g. Python CLIs): keep the entry point thin — `parse_args` + `main` in a file nothing else imports.
 
-If a previous name, option, or behavior has been removed, the final document should usually not mention it at all.
+## 7. Writing and maintaining AGENTS.md
 
-Treat documentation as the source of truth for the current design, not as a changelog. If historical context is useful, mention it in the chat response instead of the final documentation, unless explicitly asked to preserve it.
+A project's (repo-level) AGENTS.md holds operational context and judgment an agent can't get from that repo's code, toolchain, or README.
+Route each fact by scope and volatility — most "helpful detail" belongs elsewhere:
 
-Before finishing a documentation edit, search the edited files for obsolete terms and remove them unless migration notes were explicitly requested.
+- Local to one function or file → a comment or docstring at that spot, never here; it rots fast and must update in the same diff as the code.
+- Enforced by a tool (formatting, lint, types) → the tool's config, not restated.
+- Already covered by this user-level AGENTS.md → don't repeat it.
+- What the project is / human onboarding → README.
+- In-flight or volatile → the issue tracker.
+- Stable, cross-cutting, agent-facing → the project's AGENTS.md: build/test commands, where things live, conventions the agent keeps getting wrong, ask-first / never actions.
 
-## 6. Code Organization
+When something belongs there:
 
-- One file, one responsibility. Split when a file exceeds ~300 lines or mixes concerns.
-- CLI entry point (`parse_args` + `main`) lives in a thin file that nothing else imports.
-- No cross-module globals. Use an explicit setter function for any module-level state that callers must configure.
-- After extracting each module, immediately run a smoke-test import before moving on.
+- Be concrete — exact commands and a clear "done" check, not vague directives.
+- State the why only when it changes behavior.
+- Grow it from real mistakes; delete rules once the friction is gone.
+- Treat it as code: update it in the same change that alters a convention.
+- Keep it lean — a long file dilutes the weight of every line.
+- Monorepo: agents load the nearest file up the tree — keep the root thin, push specifics into per-package files.
 
-## 7. Personal Preferences
+## 8. Personal Preferences
 
 - Communicate with me in Chinese. Mixing in English is fine.
 - Use English for all code, comments, and annotations.
-- Always update `README.md`, `CLAUDE.md`, and any `*.sh` files when significant or relevant changes are made, or when explicitly asked.
+- Keep `README.md`, `AGENTS.md`, and `*.sh` in sync when a change makes them stale, or when asked.
 
 ---
 
