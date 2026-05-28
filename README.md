@@ -33,4 +33,8 @@ To overwrite local config files from `config/`, with backups:
 bash ~/personal-agent-kit/scripts/install-config.sh
 ```
 
-Set `CCH_API_KEY` if you use the included model provider examples.
+If you use the included model provider examples, add this to `~/.bashrc` or `~/.zshrc`:
+
+```bash
+export CCH_API_KEY=""
+```
