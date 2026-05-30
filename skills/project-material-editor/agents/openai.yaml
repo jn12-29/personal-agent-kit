@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Material Editor"
+  short_description: "Adapt project materials without stale claims"
+  default_prompt: "Use $project-material-editor to review and adapt this project material for the current or proposed project."
