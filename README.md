@@ -10,27 +10,50 @@ It keeps shared agent instructions, custom skills, and example configs in one re
 - `skills/`: custom skills for reviews, contract checks, multi-agent work, and skill discovery.
 - `config/`: example Codex and OpenCode config files.
 - `scripts/install-custom-skills-and-instruction.sh`: links instructions and skills into local tool directories.
+- `scripts/install-custom-skills-and-instruction.ps1`: Windows PowerShell version of the install/link script.
 - `scripts/install-config.sh`: copies config files into local tool directories, backing up existing files first.
+- `scripts/install-config.ps1`: Windows PowerShell version of the config install script.
 - `scripts/planning-with-files/`: notes for installing the external `planning-with-files` skill.
 
 ## Install
 
+macOS / Linux:
+
 ```bash
-git clone https://github.com/jn12-29/personal-agent-kit.git ~/personal-agent-kit
-bash ~/personal-agent-kit/scripts/install-custom-skills-and-instruction.sh
+git clone https://github.com/jn12-29/personal-agent-kit.git personal-agent-kit
+cd personal-agent-kit
+bash scripts/install-custom-skills-and-instruction.sh
+```
+
+Windows PowerShell:
+
+```powershell
+git clone https://github.com/jn12-29/personal-agent-kit.git personal-agent-kit
+Set-Location personal-agent-kit
+powershell -ExecutionPolicy Bypass -File .\scripts\install-custom-skills-and-instruction.ps1
 ```
 
 The install script links:
 
-- `~/.agents/skills` -> `~/personal-agent-kit/skills`
-- `~/.codex/AGENTS.md` -> `~/personal-agent-kit/AGENTS.md`
-- `~/.config/opencode/AGENTS.md` -> `~/personal-agent-kit/AGENTS.md`
-- `~/.claude/CLAUDE.md` -> `~/personal-agent-kit/AGENTS.md`
+Here `<repo>` is the cloned repo directory that contains the script being run.
+
+- `~/.agents/skills` -> `<repo>/skills`
+- `~/.codex/AGENTS.md` -> `<repo>/AGENTS.md`
+- `~/.config/opencode/AGENTS.md` -> `<repo>/AGENTS.md`
+- `~/.claude/CLAUDE.md` -> `<repo>/AGENTS.md`
+
+Existing targets are backed up as `.bak.<timestamp>` before replacement, including `~/.agents/skills`. The install scripts do not silently fall back when linking fails: macOS/Linux prints the symlink failure and asks before copying as a fallback; Windows prints the failure reason and asks before using a junction, hard link, or copy fallback. If fallback is declined or fails, the backup is restored.
 
 To overwrite local config files from `config/`, with backups:
 
 ```bash
-bash ~/personal-agent-kit/scripts/install-config.sh
+bash scripts/install-config.sh
+```
+
+Windows PowerShell:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\install-config.ps1
 ```
 
 If you use the included model provider examples, add this to `~/.bashrc` or `~/.zshrc`:
@@ -51,4 +74,11 @@ Zsh:
 
 ```bash
 printf '\nexport CCH_API_KEY=""\n' >> ~/.zshrc
+```
+
+PowerShell:
+
+```powershell
+New-Item -ItemType File -Path $PROFILE -Force
+Add-Content -Path $PROFILE -Value '$env:CCH_API_KEY=""'
 ```

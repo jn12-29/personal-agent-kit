@@ -3,11 +3,8 @@
 # Config is handled separately by scripts/install-config.sh.
 set -euo pipefail
 
-REPO="${AGENT_KIT_DIR:-$HOME/personal-agent-kit}"
-GIT_URL="https://github.com/jn12-29/personal-agent-kit.git"
-
-# repo 不在则 clone
-[ -d "$REPO/.git" ] || git clone "$GIT_URL" "$REPO"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO="${AGENT_KIT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 
 # link <真身> <链接位置>:已正确链接→跳过;已有内容→备份后再链;绝不删除
 link() {
@@ -21,11 +18,49 @@ link() {
     local bak="$dst.bak.$(date +%Y%m%d%H%M%S)"
     mv "$dst" "$bak"; echo "↪ 已备份: $dst → $bak"
   fi
-  ln -s "$src" "$dst"
-  echo "→ 已链接: $dst → $src"
+  local err
+  err="$(mktemp)"
+  if ln -s "$src" "$dst" 2>"$err"; then
+    rm -f "$err"
+    echo "→ 已链接: $dst → $src"
+    return
+  fi
+
+  echo "Symlink failed: $dst → $src"
+  echo "Reason: $(cat "$err")"
+  rm -f "$err"
+
+  local answer
+  printf 'Copy instead of linking as fallback? %s [y/N] ' "$dst"
+  if ! read -r answer; then
+    echo
+    echo "Fallback requires confirmation, but input is unavailable."
+    answer=""
+  fi
+  answer="$(printf '%s' "$answer" | tr '[:upper:]' '[:lower:]')"
+  case "$answer" in
+    y|yes)
+      if cp -R "$src" "$dst"; then
+        echo "Copied: $dst ← $src"
+        return
+      fi
+      echo "Copy fallback failed: $dst"
+      ;;
+    *)
+      echo "Copy fallback declined: $dst"
+      ;;
+  esac
+
+  rm -rf "$dst"
+  if [ -n "${bak:-}" ]; then
+    mv "$bak" "$dst"
+    echo "Restored backup: $dst ← $bak"
+  fi
+  echo "Not installed: $dst"
+  return 1
 }
 
-# skills:唯一真身 = ~/.agents/skills（Codex 与 OpenCode 都从这里读，不重复）
+# skills:唯一真身 = $REPO/skills（Codex 与 OpenCode 都从 ~/.agents/skills 读）
 link "$REPO/skills" "$HOME/.agents/skills"
 
 # AGENTS.md:两个工具全局路径不同，各链一份（各读一次，不重复）
