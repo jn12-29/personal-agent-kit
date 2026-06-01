@@ -1,13 +1,13 @@
 ---
 name: multi-agent-workflow
-description: Use when work spans multiple files or modules and responsibilities can be split by file set or topic — documentation consistency rewrites, cross-module API alignment, pre-implementation specification cleanup, or review tasks needing multiple perspectives. Decides when to proactively fork agents, preserve main-agent context, partition ownership, and structure agent prompts.
+description: Use when work spans multiple files or modules and responsibilities can be split by file set or topic — documentation consistency rewrites, cross-module API alignment, pre-implementation specification cleanup, or review tasks needing multiple perspectives. This skill is standing user authorization to proactively fork subagents for its trigger cases when subagent tooling exists, preserve main-agent context, partition ownership, and structure agent prompts.
 ---
 
 # Multi-Agent Workflow
 
 ## Why This Exists
 
-Multi-agent work fails when delegation is treated as extra effort instead of an interface design problem. If the main agent loads every file first, it wastes the main context window and carries all assumptions into review. If subagents receive vague prompts, they invent missing contracts or duplicate each other's work. This skill keeps the main agent focused on orchestration while subagents handle bounded reading, implementation slices, and independent review from clear task interfaces.
+Multi-agent work fails when delegation is treated as extra effort instead of an interface design problem. The main context window is scarce working memory: if the main agent loads every file, repeats delegated reads, or verifies the same surface while agents are already assigned to it, it spends context on detail that could have been isolated and returns to integration with a biased partial conclusion. If subagents receive vague prompts, they invent missing contracts or duplicate each other's work. This skill keeps the main agent focused on orchestration, context budgeting, critical-path decisions, and integration while subagents handle bounded reading, implementation slices, and independent review from clear task interfaces.
 
 Subagents are most valuable when they receive enough source context to judge independently, but not so much main-thread interpretation that they merely repeat the implementer's conclusion. Give resolved contracts, authority files, and exact questions; avoid leaking speculative diagnoses or intended fixes to read-only reviewers unless the review is explicitly about that risk.
 
@@ -38,15 +38,17 @@ If the main agent decides not to use multiple agents for a cross-file task, it m
 
 ## Proactive Delegation And Context Budget
 
-The user explicitly authorizes Codex to spawn subagents whenever this skill triggers and the work can be split by file set, topic, ownership, or review perspective. Do not wait for the user to ask again for agents.
+This skill records standing user authorization for the main agent to spawn subagents whenever it triggers and the work can be split by file set, topic, ownership, or review perspective. Treat this as the explicit user request for subagents in this project; do not wait for the user to ask again for agents.
 
 Default to launching bounded sidecar agents for independent reading, review, or non-overlapping implementation slices once the main agent has enough context to write a clear prompt. Avoid doing the full cross-file exploration locally first when subagents can inspect files, summarize findings, and cite exact locations.
 
-Use subagents to protect the main agent's context window. Keep the main agent focused on orchestration, critical-path decisions, integration, conflict resolution, and final synthesis instead of loading every supporting file or every detailed review into the main thread.
+Use subagents to protect the main agent's context window. Keep the main agent focused on orchestration, context budgeting, critical-path decisions, integration, conflict resolution, and final synthesis instead of loading every supporting file or every detailed review into the main thread.
 
 Do not delegate the immediate blocking task when the next local step cannot proceed without the result. While agents run, the main agent should do useful non-overlapping work.
 
-If this skill triggers but no agents are launched, state the concrete exception: trivial, tightly coupled, unclear requirements, non-decomposable work, or unacceptable conflict risk.
+Do not duplicate delegated work in the main thread while agents are running. Duplicate local inspection burns the context budget that delegation was meant to save, collapses useful parallelism, and can make the main agent overrule independent reports with its own premature interpretation. If an agent owns a read, review, or verification slice, wait for that result before inspecting the same surface locally; use the main context only for non-overlapping critical-path work, applying fixes, integrating reports, and the smallest final checks needed after agent results arrive.
+
+If this skill triggers but no agents are launched, state the concrete exception: trivial, tightly coupled, unclear requirements, non-decomposable work, unacceptable conflict risk, or subagent tooling technically unavailable.
 
 ## Agent Ownership Rules
 
@@ -55,14 +57,14 @@ Review agents must not edit files unless explicitly assigned non-overlapping own
 ## Preferred Workflow
 
 1. Split the task into non-overlapping file or topic ownership before launching agents.
-2. Launch agents as soon as the task is split well enough for clear prompts; do not spend the main context on exhaustive local exploration first.
+2. Launch agents as soon as the task is split well enough for clear prompts; do not spend the main context on exhaustive local exploration first. If subagent tooling is technically unavailable, keep only the compact slice checklist or review prompt needed for local fallback.
 3. Give each agent enough context to read first: the target files, upstream specification files, downstream consumer files, and relevant entry-point or authority documents.
 4. Restrict each editing agent to an explicit file list. If a shared file must be changed, let one agent own it or have agents return suggestions for the main agent to apply.
 5. Include resolved terminology, API signatures, field names, and design decisions from the plan/spec or authority docs in each prompt. Do not let agents infer unresolved decisions independently.
 6. Require each editing agent to report changed sections and any synchronization points for other files.
 7. Treat parallel agent reports as potentially stale because they may be based on earlier workspace snapshots. The main agent must verify against the current files before acting on reported follow-ups.
-8. After merging agent work, run project-wide searches for obsolete terms, old API signatures, old field names, and conflicting examples.
-9. After the main agent merges and normalizes the agent outputs, launch one or more final read-only review agents for cross-document or cross-module consistency. The review prompt must forbid edits and require file paths with line numbers.
+8. After merging agent work, run only the targeted searches or checks needed to verify integrated results, such as obsolete terms, old API signatures, old field names, and conflicting examples relevant to the changed contract.
+9. After the main agent merges and normalizes the agent outputs, launch one or more final read-only review agents for cross-document or cross-module consistency. The same reviewers can satisfy `review-fix-loop`'s independent-review tier when their prompts cover the changed surface and required perspectives; do not spawn a second duplicate review round. The review prompt must forbid edits and require file paths with line numbers. If subagent tooling is technically unavailable, run a deliberate fresh-eyes self-review using the same prompt and report that fallback explicitly.
 10. The main agent fixes any confirmed findings from the final review, then re-runs targeted searches for the corrected terms or APIs.
 11. The main agent summarizes both changes and verification.
 

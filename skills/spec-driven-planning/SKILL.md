@@ -31,7 +31,7 @@ When uncertain, write the smallest useful plan/spec before implementation. Do no
 6. Identify interfaces: files, modules, data shapes, configuration fields, commands, paths, prompts, public outputs, and downstream consumers.
 7. Identify document interfaces: which docs are authority, which docs consume or summarize them, who owns each doc, and what each doc must contain or avoid.
 8. Write the smallest plan/spec that makes the work executable without hidden context.
-9. Convert decomposable work into self-contained handoff blocks before spawning agents.
+9. Convert decomposable work into self-contained handoff blocks before spawning agents authorized by `multi-agent-workflow` or `review-fix-loop`.
 10. Update durable progress state at phase boundaries or after meaningful discoveries, verification results, blockers, and goal changes.
 11. If implementation reveals a contract gap or goal drift, pause broad coding, update the requirement snapshot or plan/spec, then resume.
 
@@ -40,13 +40,13 @@ When uncertain, write the smallest useful plan/spec before implementation. Do no
 Follow existing repo conventions first.
 
 - Use an inline chat plan for small, short-lived tasks.
-- For durable work without an existing convention, use `.planning/<plan-id>/` with `.planning/.active_plan`, `requirement.md`, `plan.md`, `progress.md`, and optional `findings.md`; read [planning-state.md](references/planning-state.md) first.
+- For durable work without an existing convention, use `.planning/<plan-id>/` with `.planning/.active_plan`, `requirement.md`, `plan.md`, `progress.md`, and optional `findings.md`; read [planning-state.md](references/planning-state.md) first. Use `YYYY-MM-DD-short-slug` for `<plan-id>` unless the repo or tool provides a stable id.
 - Put user-requested formal plan/spec deliverables where the user or repo expects them, not only inside ignored `.planning/` state. Link to those deliverables from `.planning/<plan-id>/requirement.md` or `plan.md` when durable state is also useful.
-- Keep `.planning/` for requirement, plan, spec, progress, and planning-relevant findings. Put general scratch data, raw extracts, one-off scripts, logs, and bulky intermediate outputs under the repo's working-artifact convention, such as `.work/<task-slug>/`, and link to them instead of duplicating them.
+- Keep `.planning/` for requirement, plan, spec, progress, and concise planning-relevant findings that affect the requirement, plan, spec, contract, or handoff. Put general scratch data, raw extracts, one-off scripts, logs, and bulky intermediate outputs under the repo's working-artifact convention, such as `.work/<task-slug>/`, and link to them instead of duplicating them.
 - If the repo already separates requirements from plans, write the snapshot in that requirements document and link to it from the plan/spec.
 - If the repo has a mature planning/spec convention that conflicts with `.planning/`, follow the repo convention but keep the same active-pointer and requirement/progress semantics where possible.
 
-By default, `.planning/` is working state and should not be committed. When creating `.planning/`, ensure `.planning/` is ignored in `.gitignore` unless the user explicitly asks to track it or has intentionally commented out an existing ignore rule such as `# .planning/`.
+By default, `.planning/` is working state and should not be committed. When actually creating `.planning/`, ensure `.planning/` is ignored in `.gitignore` unless the user explicitly asks to track it or has intentionally commented out an existing ignore rule such as `# .planning/`. If the repo has no `.gitignore`, create the smallest one needed for the new working-state ignore entry; do not create `.gitignore` only to document a convention.
 
 Treat active plan/spec docs as current-state source-of-truth documents, not changelogs. Historical context belongs in the chat unless the user explicitly asks for it in the document.
 
@@ -60,7 +60,7 @@ Treat active plan/spec docs as current-state source-of-truth documents, not chan
 - Every non-trivial task has a clear objective, non-goals, and verification.
 - Every durable plan/spec has a requirement snapshot that states the current target, status, validity, non-goals, and final acceptance check.
 - Every durable planning state has a single active pointer, or the absence of a pointer is intentionally justified before old plan files are used.
-- `.planning/` is ignored by default unless the user explicitly chooses to track it.
+- When actually creating `.planning/`, `.planning/` is ignored by default unless the user explicitly chooses to track it.
 - Existing plan/spec/progress files are classified before use; reference-only, historical, stale, or superseded files are not treated as implementation targets.
 - Every task has explicit inputs, outputs, owner, downstream handoff, and done condition.
 - Every interface has an owner, inputs, outputs, invariants, consumers, and source of truth.

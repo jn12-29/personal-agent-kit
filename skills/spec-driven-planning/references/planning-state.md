@@ -22,9 +22,11 @@ Prefer existing repo conventions first. If no convention exists and durable stat
 2026-06-02-skill-improvements
 ```
 
+Use `YYYY-MM-DD-short-slug` for `<plan-id>` unless the repo or tool provides a stable id. Keep the active directory name stable after other files link to it.
+
 If the repo has a mature planning/spec convention that conflicts with `.planning/`, follow the repo convention but keep the same active-pointer and requirement/progress semantics where possible.
 
-By default, `.planning/` is working state, not a project artifact, and should not be committed. When creating `.planning/`, ensure `.planning/` is ignored in `.gitignore` unless the user explicitly asks to track it or has intentionally commented out an existing ignore rule such as `# .planning/`. Treat a manually commented ignore rule as a deliberate override, not a formatting issue to "fix."
+By default, `.planning/` is working state, not a project artifact, and should not be committed. When actually creating `.planning/`, ensure `.planning/` is ignored in `.gitignore` unless the user explicitly asks to track it or has intentionally commented out an existing ignore rule such as `# .planning/`. If the repo has no `.gitignore`, create the smallest one needed for the new working-state ignore entry. Treat a manually commented ignore rule as a deliberate override, not a formatting issue to "fix."
 
 User-requested formal plan/spec deliverables are project artifacts. Put them where the user or repo expects them, not only inside ignored `.planning/` state. Use `.planning/<plan-id>/requirement.md` or `plan.md` to link to the formal deliverable and track current status.
 
@@ -45,9 +47,9 @@ If the active `requirement.md` says `complete`, `paused`, `reference-only`, or `
 - `requirement.md`: current goal contract. It owns the requirement snapshot, target status, validity, non-goals, final acceptance check, and which plan files are active.
 - `plan.md`: work breakdown, task interfaces, spec links, and handoff blocks. It is executable only while `requirement.md` is active and names it as an implementation target.
 - `progress.md`: chronological progress, current phase, completed checks, blockers, verification results, and remaining work.
-- `findings.md`: optional persistent research notes, facts from browser/PDF/image inspection, source links, and decisions that would otherwise be lost from context.
+- `findings.md`: optional concise findings that affect the requirement, plan, spec, contract, or handoff, plus source links and decisions that would otherwise be lost from context.
 
-Write new facts to `findings.md` when exploration itself is the work. Write action and verification status to `progress.md`. Keep `requirement.md` short and authoritative; do not let it become a session log.
+Write planning-relevant facts to `findings.md` when exploration itself changes or justifies the plan. Put raw browser/PDF/image extracts, logs, bulky data, one-off scripts, and intermediate outputs in the repo's working-artifact location, such as `.work/<task-slug>/`, and link to them. Write action and verification status to `progress.md`. Keep `requirement.md` short and authoritative; do not let it become a session log.
 
 ## Authority Classes
 

@@ -1,6 +1,6 @@
 ---
 name: review-fix-loop
-description: Use whenever a task modifies files — code, documentation, configuration, tests, scripts, prompts, examples, or generated project files. Enforces an explicit review-after-implementation loop with re-review after every fix, so review is never skipped or treated as optional final polish. Trigger this even for small edits and quick fixes, and whenever the user asks for careful review, correctness, or end-to-end completion.
+description: Use whenever a task modifies files — code, documentation, configuration, tests, scripts, prompts, examples, or generated project files. Enforces an explicit review-after-implementation loop with re-review after every fix, so review is never skipped or treated as optional final polish. For independent-review tiers, this skill is standing user authorization to spawn read-only review subagents when subagent tooling exists. Trigger this even for small edits and quick fixes, and whenever the user asks for careful review, correctness, or end-to-end completion.
 ---
 
 # Review-Fix Loop
@@ -31,8 +31,8 @@ Review intensity should match the blast radius of the change. Over-reviewing tri
 
 | Tier | The change is... | Do this |
 | --- | --- | --- |
-| Self-review | Single file and localized, with no shared contract, config, script, prompt, test, public-output, or cross-document impact. Behavior impact is absent or contained entirely inside the changed surface, such as wording, comments, a local refactor, or a small localized bug fix. A comment- or wording-only edit to a test file, with no change to assertions or test behavior, stays in this tier. | Re-read the changed surface with fresh eyes against the request and authority documents, then verify. |
-| One independent reviewer | Multiple files, or non-local behavior impact, or touches runtime flags, scheduling, cache semantics, paths, config fields, schemas, serialization, scripts, prompts, test behavior or assertions, or docs that define current behavior. | Get one independent read-only review after implementing, then fix and re-review. |
+| Self-review | Single file and localized, with no shared contract, config, script, prompt, test, public-output, or cross-document impact. Behavior impact is absent or contained entirely inside the changed surface, such as wording, comments, a local refactor, or a small localized bug fix. A purely mechanical multi-file edit can stay here only when it has no behavior, contract, prompt, script, config, schema, public-output, or cross-document meaning and every changed line follows the same obvious pattern. A comment- or wording-only edit to a test file, with no change to assertions or test behavior, stays in this tier. | Re-read the changed surface with fresh eyes against the request and authority documents, then verify. |
+| One independent reviewer | Multiple files with non-local or cross-document impact, or touches runtime flags, scheduling, cache semantics, paths, config fields, schemas, serialization, scripts, prompts, test behavior or assertions, or docs that define current behavior. | Get one independent read-only review after implementing, then fix and re-review. |
 | Two or more independent reviewers | Crosses module boundaries, or affects shared contracts, public behavior, shared types, shared runtime state, pipeline boundaries, user-facing output, or is large enough to need parallel work. | Get at least two independent read-only reviews, each with a different perspective. |
 
 When unsure which tier applies, choose the stricter one.
@@ -41,9 +41,11 @@ When unsure which tier applies, choose the stricter one.
 
 Independent review means a reviewer that does not carry the implementer's context and therefore cannot rationalize the change as fine because it just wrote it. Use whatever the environment provides: a review subagent, a separate reviewer in a multi-agent setup, a parallel agent thread, or a fresh review pass on a cleared context.
 
-Prefer independent review over main-agent self-review for non-trivial changes. It catches more, and it preserves the main agent's context window for implementation, integration, and final synthesis. Treat independent review as pre-authorized within this skill's scope: do not pause to ask whether to review. If the environment exposes a real read-only sandbox or permission mode, run reviewers there so read-only is enforced rather than merely requested.
+Prefer independent review over main-agent self-review for non-trivial changes. It catches more, and it preserves the main agent's context window for implementation, integration, and final synthesis. This skill records standing user authorization for independent review and read-only review subagents in its non-self-review tiers; treat that as the explicit user request for reviewer subagents in this project, and do not pause to ask whether to review. If the environment exposes a real read-only sandbox or permission mode, run reviewers there so read-only is enforced rather than merely requested.
 
-If independent review is not available, for example in a single-threaded chat agent with no subagents, do a deliberate fresh-eyes self-review as a distinct step. Re-read the full changed surface against the request and authority documents as if someone else wrote it, then state in the final report that independent review was unavailable. Never fabricate reviewers or review rounds, and never claim subagents were spawned when they were not.
+While independent reviewers are running, do not repeat their assigned review or broad verification locally. Duplicating that work wastes the main context, weakens the value of independent review by letting the main agent form a competing conclusion first, and delays integration work that only the main agent can do. Work on non-overlapping tasks only, then use the reviewer reports to drive focused fixes and the smallest final verification needed.
+
+If independent review is technically unavailable, for example in a single-threaded chat agent with no subagents, do a deliberate fresh-eyes self-review as a distinct step. Re-read the full changed surface against the request and authority documents as if someone else wrote it, then state in the final report that independent review was unavailable. Never fabricate reviewers or review rounds, and never claim subagents were spawned when they were not.
 
 ## Reviewer Prompt Template
 
@@ -95,6 +97,8 @@ Enforce the minimal true contract: the invariants and dependencies that actually
 ## Loop And Stopping Rules
 
 - Review happens after implementation, not only before.
+- Once independent reviewers are assigned, the main agent must not duplicate their review or broad verification while they run. This preserves the main context for integration and keeps reviewer judgment independent instead of making the main agent re-litigate the same surface. It should wait for reviewer reports for that surface, then inspect only the reported findings, necessary integration points, and minimal final checks.
+- If `multi-agent-workflow` already launched final read-only reviewers that cover this skill's required changed surface and perspectives, count that as the independent review round instead of spawning duplicate reviewers.
 - If review finds blockers, fix them and re-review. Do not stop right after the fix.
 - If a review round used independent reviewers, re-run independent read-only review after each blocker fix at the same or stricter tier.
 - If a fix expands the change's blast radius, re-pick the tier from the table and apply the stricter tier's review before continuing.

@@ -16,7 +16,7 @@ Do not turn every thought into a file. File-based work is valuable when the arti
 Create or update files when the information is one of these:
 
 - Progress notes, acceptance evidence, or resumable state that supports work spanning phases or context resets. If the file defines requirements, active plan state, specs, contracts, or handoffs, use `spec-driven-planning` for structure and status.
-- Findings from research, browser work, PDFs, images, logs, or code exploration that would be expensive or impossible to rediscover.
+- Findings from research, browser work, PDFs, images, logs, or code exploration that would be expensive or impossible to rediscover and do not themselves define requirements, plans, specs, contracts, or handoffs.
 - Intermediate results that need comparison, review, transformation, or handoff.
 - Reusable or one-off scripts that make a repeated, fragile, or data-heavy operation reproducible.
 - Commands, inputs, outputs, and verification results needed to explain or reproduce the work.
@@ -28,7 +28,7 @@ Skip file creation for tiny one-shot answers, throwaway calculations, obvious co
 ## Artifact Decision Gate
 
 - Inline only: small answer, single command, trivial edit, or no durable value.
-- Working artifact: useful for this task but not final user-facing output, such as notes, scratch data, one-off scripts, findings, progress, or intermediate exports. Default to not tracking it in git.
+- Working artifact: useful for this task but not final user-facing output, such as notes, scratch data, one-off scripts, findings, non-planning progress evidence, or intermediate exports. Default to not tracking it in git.
 - Planning artifact: requirement snapshot, active plan pointer, plan, spec, contract, or subagent handoff that defines what work means. Use `spec-driven-planning` for structure and status, then apply this skill only for storage hygiene and any supporting files.
 - Project artifact: user-requested or task-required final deliverable, such as code, docs, tests, assets, specs, or final generated outputs.
 - Reusable tool: script or template likely to be used again; give it a clear name, inputs, outputs, and usage notes.
@@ -41,14 +41,26 @@ Follow existing repo conventions first. Do not scatter working artifacts across 
 
 If no convention exists:
 
-- Put task-local working artifacts under a task-scoped work directory, such as `.work/<task-slug>/`.
+- Put task-local working artifacts under a task-scoped work directory, such as `.work/<task-slug>/`. Use `YYYY-MM-DD-short-slug` for `<task-slug>` unless the repo or tool provides a stable id.
 - Put durable planning state under the planning convention chosen by `spec-driven-planning`, such as `.planning/<plan-id>/`, when planning state is actually needed.
 - Put reusable scripts in the closest appropriate `scripts/` directory, or in the task work directory if they are one-off.
 - Put final deliverables where the user or repo convention expects them, not inside a hidden work directory.
 
-By default, `.work/` is not a project artifact and should not be committed. When creating `.work/`, ensure `.work/` is ignored in `.gitignore` unless the user explicitly asks to track it or has intentionally commented out an existing ignore rule such as `# .work/`. Treat a manually commented ignore rule as a deliberate override, not a formatting issue to "fix."
+For larger work directories, create only the subdirectories actually needed. Keep small tasks flat. Optional larger-task shape:
 
-Use descriptive, stable names: `findings.md`, `progress.md`, `verify-results.md`, `normalize-inputs.ps1`, `parsed-records.jsonl`, `figure-qa-notes.md`. Avoid `temp`, `final2`, and attempt-number names unless the number is meaningful.
+```text
+.work/<task-slug>/
+  findings.md  # task-local facts that do not define requirements, plans, specs, contracts, or handoffs
+  verify-results.md
+  scripts/
+  raw/
+  outputs/
+  figures/  # diagrams, screenshots, generated images, and figure QA notes
+```
+
+By default, `.work/` is not a project artifact and should not be committed. When actually creating `.work/`, ensure `.work/` is ignored in `.gitignore` unless the user explicitly asks to track it or has intentionally commented out an existing ignore rule such as `# .work/`. If the repo has no `.gitignore`, create the smallest one needed for the new working-artifact ignore entry; do not create `.gitignore` only to document a convention. Treat a manually commented ignore rule as a deliberate override, not a formatting issue to "fix."
+
+Use descriptive, stable names: `findings.md`, `run-log.md`, `verify-results.md`, `normalize-inputs.ps1`, `parsed-records.jsonl`, `figure-qa-notes.md`. Avoid `temp`, `final2`, and attempt-number names unless the number is meaningful.
 
 ## Workflow
 
@@ -62,7 +74,7 @@ Use descriptive, stable names: `findings.md`, `progress.md`, `verify-results.md`
 
 ## File Hygiene
 
-- Keep working files current-state where possible; put historical detail in `progress.md` or a separate log, not in the active requirement or final deliverable.
+- Keep working files current-state where possible; put non-planning history in `run-log.md` or a separate log, not in the active requirement, active plan, or final deliverable.
 - Promote a working artifact to a project artifact only when it is part of the user's requested deliverable or the user asks to keep it.
 - Do not duplicate the same fact in many places. Link or summarize instead.
 - Mark assumptions and unverified findings explicitly.
