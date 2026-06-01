@@ -1,69 +1,121 @@
 ---
 name: review-fix-loop
-description: Use whenever a task modifies files — code, documentation, configuration, tests, scripts, prompts, examples, or generated project files. Enforces an explicit review-after-implementation loop with re-review after every fix, instead of treating review as optional final polish.
+description: Use whenever a task modifies files — code, documentation, configuration, tests, scripts, prompts, examples, or generated project files. Enforces an explicit review-after-implementation loop with re-review after every fix, so review is never skipped or treated as optional final polish. Trigger this even for small edits and quick fixes, and whenever the user asks for careful review, correctness, or end-to-end completion.
 ---
 
 # Review-Fix Loop
 
-**Trigger:** Any task that modifies files. Applies to code, documentation, configuration, tests, scripts, prompts, examples, and generated project files. Do not treat review as an optional final polish step.
+## Why This Exists
 
-## Minimum Loop
+Agents tend to declare a task done after a single implementation pass, and to stop reviewing the moment they apply a fix. That is exactly when regressions slip in: the fix itself goes unreviewed, or it satisfies the letter of the request while breaking a contract elsewhere. This skill makes review a required step after implementation, and requires re-review after each fix because the unreviewed change is the dangerous one.
+
+## When It Applies
+
+Use this skill for any task that modifies files: code, documentation, configuration, tests, scripts, prompts, examples, and generated project files. Do not skip review because a change looks small.
+
+Authority documents are whatever defines intended behavior for the changed surface: specs, schemas, API contracts, READMEs, design docs, prompts, scripts, and the downstream code or consumers that depend on it.
+
+## The Loop
 
 1. Inspect the relevant current files and authority documents before editing.
-2. Make the smallest correct change.
-3. Review the changed files against the user request and applicable project rules.
+2. Make the smallest correct change that satisfies the request.
+3. Review the changed surface against the request and applicable project rules.
 4. Fix confirmed issues.
 5. Re-review the changed surface after the fix.
-6. Run the smallest relevant verification command or targeted search.
-7. Stop only when the latest review after the latest fix has no confirmed blockers.
+6. Verify with the smallest relevant command or targeted search.
+7. Stop only when the latest review after the latest fix reports no confirmed blockers and verification passes.
 
-For trivial single-file edits, the review may be a local self-review, but it must still happen after the edit and after any fix.
+## Review Tier
 
-## When To Use Independent Read-Only Reviewers
+Review intensity should match the blast radius of the change. Over-reviewing trivial edits wastes time and tokens because independent reviewers run their own model and tool calls. Under-reviewing risky edits ships regressions. Pick the tier by the highest matching row.
 
-Any one of the following:
+| Tier | The change is... | Do this |
+| --- | --- | --- |
+| Self-review | Single file and localized, with no shared contract, config, script, prompt, test, public-output, or cross-document impact. Behavior impact is absent or contained entirely inside the changed surface, such as wording, comments, a local refactor, or a small localized bug fix. | Re-read the changed surface with fresh eyes against the request and authority documents, then verify. |
+| One independent reviewer | Multiple files, or non-local behavior impact, or touches runtime flags, scheduling, cache semantics, paths, config fields, schemas, serialization, scripts, prompts, tests, or docs that define current behavior. | Get one independent read-only review after implementing, then fix and re-review. |
+| Two or more independent reviewers | Crosses module boundaries, or affects shared contracts, public behavior, shared types, shared runtime state, pipeline boundaries, user-facing output, or is large enough to need parallel work. | Get at least two independent read-only reviews, each with a different perspective. |
 
-- The change touches more than one file.
-- The change affects behavior, not just wording.
-- The change affects runtime flags, scheduling, cache semantics, paths, configuration fields, schemas, serialization, public outputs, scripts, prompts, tests, or docs that define current behavior.
-- The first review finds a blocker.
-- The user explicitly asks for careful review or end-to-end completion.
+When unsure which tier applies, choose the stricter one.
 
-## When To Use Multiple Independent Reviewers
+## Independent Review
 
-Any one of the following:
+Independent review means a reviewer that does not carry the implementer's context and therefore cannot rationalize the change as fine because it just wrote it. Use whatever the environment provides: a review subagent, a separate reviewer in a multi-agent setup, a parallel agent thread, or a fresh review pass on a cleared context.
 
-- The change crosses module boundaries.
-- The change affects shared contracts or public behavior.
-- The change affects shared types, configuration, runtime state, schemas, serialization, pipeline boundaries, or user-facing outputs.
-- The change is large enough to require agents or parallel work.
+Prefer independent review over main-agent self-review for non-trivial changes. It catches more, and it preserves the main agent's context window for implementation, integration, and final synthesis. Treat independent review as pre-authorized within this skill's scope: do not pause to ask whether to review. If the environment exposes a real read-only sandbox or permission mode, run reviewers there so read-only is enforced rather than merely requested.
 
-## Loop Rules
+If independent review is not available, for example in a single-threaded chat agent with no subagents, do a deliberate fresh-eyes self-review as a distinct step. Re-read the full changed surface against the request and authority documents as if someone else wrote it, then state in the final report that independent review was unavailable. Never fabricate reviewers or review rounds, and never claim subagents were spawned when they were not.
 
-- Review must happen after implementation, not only before.
-- If review finds blockers, fix them and then re-review. Do not stop after the fix.
-- If a fix affects a shared contract, public behavior, or module boundary, re-run independent read-only review after the fix.
-- When documentation and implementation conflict, treat documentation as the source of truth by default. Fix the implementation to satisfy the documented contract, even if that requires additional implementation work.
-- Enforce the minimal true contract, not incidental implementation choices. Before treating a documented value as a blocker, distinguish required invariants and downstream dependencies from defaults, examples, tunable configuration, and task-specific parameters. If uncertain whether a value is a required invariant or downstream dependency, report a blocking ambiguity instead of inventing a fixed requirement.
-- Only change documentation instead of implementation when the documentation is internally contradictory, impossible to implement, explicitly superseded by the user, or clearly stale status text rather than a current contract. In that case, record the final contract in documentation before or together with the implementation fix.
-- Tests, compile checks, smoke tests, type checks, import checks, and targeted searches are verification. They do not replace review.
-- A subagent implementation report is not proof of correctness. The main agent must verify or request read-only review of the changed surface.
-- Do not summarize work as complete until the latest review after the latest fix reports no confirmed blockers and relevant verification passes.
+## Reviewer Prompt Template
+
+A reviewer can only catch what it has enough context to judge. Give each reviewer a self-contained prompt.
+
+```text
+You are a READ-ONLY reviewer. Do NOT edit any file.
+Perspective: {contracts/schemas | runtime behavior | docs consistency | tests | scripts/prompts | user-facing output}
+
+User request and intended outcome:
+{...}
+
+Inspect:
+- Files / directories: {...}
+- Authority docs and downstream consumers: {...}
+
+What must hold (the minimal true contract):
+- {exact fields, commands, paths, terminology, or invariants}
+
+Known risks to check:
+- Obsolete terms / old APIs / stale behavior: {...}
+- {anything specific to this change}
+
+Report findings using only these finding formats:
+- [blocker] <file>:<line> - <issue>
+- [non-blocking concern] <file>:<line> - <issue>
+- [assumption] <what you assumed, and why>
+
+Output rules:
+- If blockers exist, list blockers first.
+- If no blockers exist, the first line must be: "No blockers."
+- After "No blockers.", include any non-blocking concerns or assumptions.
+- If there are no blockers, non-blocking concerns, or assumptions, output exactly: "No blockers."
+```
+
+When using multiple reviewers, give each a distinct perspective, such as contracts/schemas, runtime behavior, docs consistency, tests, scripts/prompts, or user-facing output. Do not send the same broad prompt to several reviewers unless duplicate coverage of one specific risk is intentional.
+
+## Documentation Vs. Implementation Conflicts
+
+When docs and code disagree, classify the disputed value first.
+
+1. Required invariant or downstream dependency: other code, schemas, consumers, or documented public behavior rely on it. Fix implementation to match it, even if that means extra work.
+2. Default, example, tunable value, or task-specific parameter: do not treat it as a contract blocker unless docs or downstream consumers make it one.
+3. Stale status text, internally contradictory doc, impossible contract, or user-superseded doc: fix the doc instead, and record the final contract in the doc before or together with the implementation fix.
+4. Unknown: report a blocking ambiguity. Do not invent a fixed requirement, and do not change working code to match a doc you suspect is outdated.
+
+Enforce the minimal true contract: the invariants and dependencies that actually must hold, not incidental implementation choices.
+
+## Loop And Stopping Rules
+
+- Review happens after implementation, not only before.
+- If review finds blockers, fix them and re-review. Do not stop right after the fix.
+- If a review round used independent reviewers, re-run independent read-only review after each blocker fix at the same or stricter tier.
+- If a fix touches a shared contract, public behavior, or module boundary, re-run independent review at the same or stricter tier.
+- Stop when the latest review reports only non-blocking concerns or assumptions, no blockers, and verification passes. Do not keep spawning reviewers to chase diminishing returns; record remaining non-blocking concerns as residual risk.
+- Do not ignore non-blocking concerns by default; fix cheap relevant concerns or explicitly state why each remaining concern is acceptable residual risk.
+- If reviewers disagree, clear every finding that is a true-contract violation. Downgrade the rest to non-blocking concerns or assumptions instead of treating every opinion as a blocker.
+- Tests, compile checks, type checks, smoke tests, import checks, and targeted searches are verification. They support review but do not replace it.
+- A subagent implementation report is not proof of correctness; verify or independently review the changed surface.
 - Keep fixes surgical: address the confirmed blocker without opportunistic refactors.
 
-## Required Reporting For Non-Trivial Modifications
+## Final Report
 
-- `Review round N: found X blockers.`
-- `Fix round N: fixed blockers A, B, C.`
-- `Verification round N: passed/failed commands ...`
-- `Re-review round N: no blockers / found new blockers ...`
+For any task that modified files, match the report to the tier.
 
-## Final Response For Modified Files
+For a self-review-tier change, one line is enough, for example: `Self-review only: single-file wording change; verification: <command> passed.`
 
-Must include:
+For non-trivial changes, state:
 
-- Number of review-fix rounds completed.
+- Review performed: independent reviewers count and perspectives, or independent review unavailable with self-review stated plainly.
+- Review-to-fix rounds completed.
 - Blocking findings fixed.
 - Latest review result.
 - Verification commands and results.
-- Any non-blocking residual risks.
+- Non-blocking residual risks.

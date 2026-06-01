@@ -1,47 +1,7 @@
 ---
-# ═══════════════════════════════════════════════════════════════════════════════
-# CLAUDE OFFICE SKILL - Diagram Creator
-# ═══════════════════════════════════════════════════════════════════════════════
-
 name: diagram-creator
 description: "Create professional diagrams using Mermaid, PlantUML, and other text-based diagram tools. Generate flowcharts, sequence diagrams, architecture diagrams, and more."
-version: "1.0.0"
-author: claude-office-skills
 license: MIT
-
-category: visualization
-tags:
-  - diagram
-  - flowchart
-  - mermaid
-  - plantuml
-  - architecture
-department: Engineering/Design
-
-models:
-  recommended:
-    - claude-sonnet-4
-    - claude-opus-4
-  compatible:
-    - claude-3-5-sonnet
-    - gpt-4
-    - gpt-4o
-
-capabilities:
-  - flowchart_creation
-  - sequence_diagrams
-  - architecture_diagrams
-  - er_diagrams
-  - class_diagrams
-
-languages:
-  - en
-  - zh
-
-related_skills:
-  - chart-designer
-  - ppt-visual
-  - dev-slides
 ---
 
 # Diagram Creator Skill

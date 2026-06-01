@@ -1,9 +1,15 @@
 ---
 name: multi-agent-workflow
-description: Use when work spans multiple files or modules and responsibilities can be split by file set or topic — documentation consistency rewrites, cross-module API alignment, pre-implementation specification cleanup, or review tasks needing multiple perspectives. Decides when to fork agents, how to partition ownership, and how to structure agent prompts.
+description: Use when work spans multiple files or modules and responsibilities can be split by file set or topic — documentation consistency rewrites, cross-module API alignment, pre-implementation specification cleanup, or review tasks needing multiple perspectives. Decides when to proactively fork agents, preserve main-agent context, partition ownership, and structure agent prompts.
 ---
 
 # Multi-Agent Workflow
+
+## Why This Exists
+
+Multi-agent work fails when delegation is treated as extra effort instead of an interface design problem. If the main agent loads every file first, it wastes the main context window and carries all assumptions into review. If subagents receive vague prompts, they invent missing contracts or duplicate each other's work. This skill keeps the main agent focused on orchestration while subagents handle bounded reading, implementation slices, and independent review from clear task interfaces.
+
+Subagents are most valuable when they receive enough source context to judge independently, but not so much main-thread interpretation that they merely repeat the implementer's conclusion. Give resolved contracts, authority files, and exact questions; avoid leaking speculative diagnoses or intended fixes to read-only reviewers unless the review is explicitly about that risk.
 
 **Trigger:** Cross-file or cross-module work where responsibilities can be split by file set or topic. Good fits include documentation consistency rewrites, pre-implementation specification cleanup, cross-module API alignment, and read-only reviews from multiple perspectives. Inspection and review tasks are especially good fits because multiple agents can examine the same files from different angles without write conflicts, then the main agent merges and ranks findings.
 
@@ -11,7 +17,7 @@ description: Use when work spans multiple files or modules and responsibilities 
 
 ## Decision Point
 
-After the main agent completes the initial project-structure read, it must explicitly consider whether multiple agents are warranted before editing or concluding on cross-file work. Use multiple independent read-only review agents when the task affects cross-file or cross-module contracts.
+After the main agent completes the initial project-structure read, it must explicitly decide what to delegate before editing or concluding on cross-file work. Use multiple independent read-only review agents when the task affects cross-file or cross-module contracts.
 
 Strong triggers include:
 
@@ -28,7 +34,19 @@ For substantial contract work, use at least two read-only reviewers with differe
 - Domain-specific pipeline contracts
 - Documentation consistency and user-facing examples
 
-If the main agent decides not to use multiple agents for a cross-file task, it should briefly state why.
+If the main agent decides not to use multiple agents for a cross-file task, it must briefly state why.
+
+## Proactive Delegation And Context Budget
+
+The user explicitly authorizes Codex to spawn subagents whenever this skill triggers and the work can be split by file set, topic, ownership, or review perspective. Do not wait for the user to ask again for agents.
+
+Default to launching bounded sidecar agents for independent reading, review, or non-overlapping implementation slices once the main agent has enough context to write a clear prompt. Avoid doing the full cross-file exploration locally first when subagents can inspect files, summarize findings, and cite exact locations.
+
+Use subagents to protect the main agent's context window. Keep the main agent focused on orchestration, critical-path decisions, integration, conflict resolution, and final synthesis instead of loading every supporting file or every detailed review into the main thread.
+
+Do not delegate the immediate blocking task when the next local step cannot proceed without the result. While agents run, the main agent should do useful non-overlapping work.
+
+If this skill triggers but no agents are launched, state the concrete exception: trivial, tightly coupled, unclear requirements, non-decomposable work, or unacceptable conflict risk.
 
 ## Agent Ownership Rules
 
@@ -37,25 +55,30 @@ Review agents must not edit files unless explicitly assigned non-overlapping own
 ## Preferred Workflow
 
 1. Split the task into non-overlapping file or topic ownership before launching agents.
-2. Give each agent enough context to read first: the target files, upstream specification files, downstream consumer files, and relevant entry-point or authority documents.
-3. Restrict each editing agent to an explicit file list. If a shared file must be changed, let one agent own it or have agents return suggestions for the main agent to apply.
-4. Include the final terminology, API signatures, field names, and design decisions in each prompt. Do not let agents infer unresolved decisions independently.
-5. Require each editing agent to report changed sections and any synchronization points for other files.
-6. Treat parallel agent reports as potentially stale because they may be based on earlier workspace snapshots. The main agent must verify against the current files before acting on reported follow-ups.
-7. After merging agent work, run project-wide searches for obsolete terms, old API signatures, old field names, and conflicting examples.
-8. After the main agent merges and normalizes the agent outputs, launch one or more final read-only review agents for cross-document or cross-module consistency. The review prompt must forbid edits and require file paths with line numbers.
-9. The main agent fixes any confirmed findings from the final review, then re-runs targeted searches for the corrected terms or APIs.
-10. The main agent summarizes both changes and verification.
+2. Launch agents as soon as the task is split well enough for clear prompts; do not spend the main context on exhaustive local exploration first.
+3. Give each agent enough context to read first: the target files, upstream specification files, downstream consumer files, and relevant entry-point or authority documents.
+4. Restrict each editing agent to an explicit file list. If a shared file must be changed, let one agent own it or have agents return suggestions for the main agent to apply.
+5. Include resolved terminology, API signatures, field names, and design decisions from the plan/spec or authority docs in each prompt. Do not let agents infer unresolved decisions independently.
+6. Require each editing agent to report changed sections and any synchronization points for other files.
+7. Treat parallel agent reports as potentially stale because they may be based on earlier workspace snapshots. The main agent must verify against the current files before acting on reported follow-ups.
+8. After merging agent work, run project-wide searches for obsolete terms, old API signatures, old field names, and conflicting examples.
+9. After the main agent merges and normalizes the agent outputs, launch one or more final read-only review agents for cross-document or cross-module consistency. The review prompt must forbid edits and require file paths with line numbers.
+10. The main agent fixes any confirmed findings from the final review, then re-runs targeted searches for the corrected terms or APIs.
+11. The main agent summarizes both changes and verification.
 
 ## Required Agent Prompt Structure
 
 Each agent prompt must state:
 
+- Self-contained context sufficient for the agent to work without relying on unstated main-thread context.
 - The agent's role and goal.
-- Files that must be read before editing.
-- Files the agent is allowed to modify.
-- Final desired terminology and API contracts.
+- Why this work is being delegated and the exact output needed.
+- Files or directories the agent must read.
+- Files the agent is allowed to modify, or `none` for read-only review.
+- Source plan/spec section or authority document, when one exists.
+- Resolved terminology and API contracts.
 - Explicit obsolete terms or designs that must not remain.
 - For review tasks, require reviewers to classify findings as blocker, non-blocking concern, or assumption, and justify why any configurable value is a contract invariant rather than an example or tunable parameter.
+- For read-only reviewers, raw artifacts and exact risks to check; do not include the intended fix unless the reviewer needs it to assess a named risk.
 - Whether the task is edit mode or read-only review mode.
 - The required final report format.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Improve Skills"
+  short_description: "Refine skills with why-first evals"
+  default_prompt: "Use $improve-skills to revise this skill or related skill set from observed failures, strengthen why and triggers, align adjacent boundaries, add realistic eval/trigger checks, and validate the changed behavior."
