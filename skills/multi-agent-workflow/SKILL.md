@@ -1,6 +1,6 @@
 ---
 name: multi-agent-workflow
-description: Use when work spans multiple files or modules and responsibilities can be split by file set or topic — documentation consistency rewrites, cross-module API alignment, pre-implementation specification cleanup, or review tasks needing multiple perspectives. This skill is standing user authorization to proactively fork subagents for its trigger cases when subagent tooling exists, preserve main-agent context, partition ownership, and structure agent prompts.
+description: Use when work spans multiple files or modules and responsibilities can be split by file set or topic — documentation consistency rewrites, cross-module API alignment, pre-implementation specification cleanup, or review tasks needing multiple perspectives. Proactively forks subagents for its trigger cases when subagent tooling exists, preserves main-agent context, partitions ownership, and structures agent prompts.
 ---
 
 # Multi-Agent Workflow
@@ -38,7 +38,7 @@ If the main agent decides not to use multiple agents for a cross-file task, it m
 
 ## Proactive Delegation And Context Budget
 
-This skill records standing user authorization for the main agent to spawn subagents whenever it triggers and the work can be split by file set, topic, ownership, or review perspective. Treat this as the explicit user request for subagents in this project; do not wait for the user to ask again for agents.
+Spawn subagents whenever this skill triggers and the work can be split by file set, topic, ownership, or review perspective.
 
 Default to launching bounded sidecar agents for independent reading, review, or non-overlapping implementation slices once the main agent has enough context to write a clear prompt. Avoid doing the full cross-file exploration locally first when subagents can inspect files, summarize findings, and cite exact locations.
 

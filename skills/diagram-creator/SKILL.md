@@ -1,388 +1,62 @@
 ---
 name: diagram-creator
-description: "Create professional diagrams using Mermaid, PlantUML, and other text-based diagram tools. Generate flowcharts, sequence diagrams, architecture diagrams, and more."
-license: MIT
+description: Create or revise text-based diagrams for documentation, specs, architecture notes, workflows, data flows, sequence interactions, C4 views, ER/class/state models, and lightweight timelines using Mermaid, PlantUML, D2, or ASCII. Use when the requested output is diagram source code or a maintainable diagram embedded in Markdown/docs. Do not use for polished document figures, raster image generation, slide-deck design, or UI mockups.
 ---
 
-# Diagram Creator Skill
-
-## Overview
-
-I help you create professional diagrams using text-based diagram tools like Mermaid and PlantUML. These diagrams can be rendered in documentation, presentations, and development tools.
-
-**What I can do:**
-- Create flowcharts and process diagrams
-- Generate sequence diagrams
-- Build architecture and system diagrams
-- Design ER (Entity-Relationship) diagrams
-- Create class diagrams and UML
-- Generate organizational charts
-- Build Gantt charts and timelines
-
-**What I cannot do:**
-- Render images directly (use Mermaid live editor or similar)
-- Create pixel-perfect custom designs
-- Generate raster images
-
----
-
-## How to Use Me
-
-### Step 1: Describe Your Diagram
-
-Tell me:
-- What process/system/concept to visualize
-- Type of diagram needed
-- Level of detail
-- Target audience
-
-### Step 2: Choose Format
-
-- **Mermaid**: Best for web, markdown, GitHub
-- **PlantUML**: Best for UML, complex diagrams
-- **ASCII**: Simple, universal compatibility
-- **D2**: Modern, stylish diagrams
-
-### Step 3: Specify Style
-
-- Colors and themes
-- Direction (top-down, left-right)
-- Level of detail
-
----
-
-## Diagram Types
-
-### 1. Flowchart / Process Diagram
-
-**Use for**: Business processes, decision trees, workflows
-
-```mermaid
-flowchart TD
-    A[Start] --> B{Decision?}
-    B -->|Yes| C[Action 1]
-    B -->|No| D[Action 2]
-    C --> E[End]
-    D --> E
-```
-
-### 2. Sequence Diagram
-
-**Use for**: API calls, user interactions, system communication
-
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant A as App
-    participant S as Server
-    participant D as Database
-    
-    U->>A: Click Login
-    A->>S: POST /auth/login
-    S->>D: Query user
-    D-->>S: User data
-    S-->>A: JWT token
-    A-->>U: Redirect to dashboard
-```
-
-### 3. Architecture Diagram
-
-**Use for**: System design, infrastructure, component relationships
-
-```mermaid
-flowchart TB
-    subgraph Client
-        A[Web App]
-        B[Mobile App]
-    end
-    
-    subgraph Backend
-        C[API Gateway]
-        D[Auth Service]
-        E[User Service]
-        F[Order Service]
-    end
-    
-    subgraph Data
-        G[(PostgreSQL)]
-        H[(Redis)]
-        I[(S3)]
-    end
-    
-    A & B --> C
-    C --> D & E & F
-    D --> H
-    E --> G
-    F --> G & I
-```
-
-### 4. Entity-Relationship Diagram
-
-**Use for**: Database design, data models
-
-```mermaid
-erDiagram
-    CUSTOMER ||--o{ ORDER : places
-    ORDER ||--|{ LINE_ITEM : contains
-    PRODUCT ||--o{ LINE_ITEM : "ordered in"
-    
-    CUSTOMER {
-        int id PK
-        string name
-        string email
-    }
-    ORDER {
-        int id PK
-        date created_at
-        int customer_id FK
-    }
-    PRODUCT {
-        int id PK
-        string name
-        decimal price
-    }
-```
-
-### 5. Class Diagram
-
-**Use for**: OOP design, code structure
-
-```mermaid
-classDiagram
-    class Animal {
-        +String name
-        +int age
-        +makeSound()
-    }
-    class Dog {
-        +String breed
-        +bark()
-    }
-    class Cat {
-        +boolean indoor
-        +meow()
-    }
-    
-    Animal <|-- Dog
-    Animal <|-- Cat
-```
-
-### 6. State Diagram
-
-**Use for**: State machines, status workflows
-
-```mermaid
-stateDiagram-v2
-    [*] --> Draft
-    Draft --> Submitted: Submit
-    Submitted --> InReview: Assign reviewer
-    InReview --> Approved: Approve
-    InReview --> Rejected: Reject
-    Rejected --> Draft: Revise
-    Approved --> [*]
-```
-
-### 7. Gantt Chart
-
-**Use for**: Project timelines, schedules
-
-```mermaid
-gantt
-    title Project Timeline
-    dateFormat  YYYY-MM-DD
-    
-    section Planning
-    Requirements    :a1, 2024-01-01, 14d
-    Design          :a2, after a1, 21d
-    
-    section Development
-    Backend         :b1, after a2, 30d
-    Frontend        :b2, after a2, 30d
-    
-    section Testing
-    QA Testing      :c1, after b1, 14d
-    UAT             :c2, after c1, 7d
-```
-
-### 8. Mind Map
-
-**Use for**: Brainstorming, concept organization
-
-```mermaid
-mindmap
-    root((Project))
-        Features
-            Feature A
-            Feature B
-            Feature C
-        Team
-            Frontend
-            Backend
-            Design
-        Timeline
-            Q1
-            Q2
-            Q3
-```
-
-### 9. Git Graph
-
-**Use for**: Branch visualization, git workflows
-
-```mermaid
-gitGraph
-    commit
-    commit
-    branch feature
-    checkout feature
-    commit
-    commit
-    checkout main
-    merge feature
-    commit
-```
-
----
-
-## Output Format
-
-```markdown
-# Diagram: [Name]
-
-**Type**: [Flowchart / Sequence / Architecture / etc.]
-**Tool**: [Mermaid / PlantUML]
-**Purpose**: [What it illustrates]
-
----
-
-## Diagram Code
-
-### Mermaid
-
-```mermaid
-[Mermaid code here]
-```
-
-### PlantUML (Alternative)
-
-```plantuml
-[PlantUML code here]
-```
-
----
-
-## Rendering Instructions
-
-1. **Mermaid Live Editor**: https://mermaid.live/
-2. **GitHub**: Paste directly in markdown files
-3. **VS Code**: Install Mermaid extension
-4. **Notion**: Use code block with mermaid type
-
----
-
-## Customization Options
-
-### Color Theme
-Add to the beginning:
-```
-%%{init: {'theme':'forest'}}%%
-```
-
-Available themes: default, forest, dark, neutral
-
-### Direction
-- TB (top to bottom)
-- BT (bottom to top)
-- LR (left to right)
-- RL (right to left)
-
----
-
-## Notes
-
-- [Any notes about the diagram]
-- [Assumptions made]
-```
-
----
-
-## PlantUML Examples
-
-### Sequence Diagram
-```plantuml
-@startuml
-actor User
-participant "Web App" as App
-participant "API Server" as API
-database "Database" as DB
-
-User -> App: Login request
-App -> API: POST /auth/login
-API -> DB: SELECT user
-DB --> API: User record
-API --> App: JWT token
-App --> User: Redirect to dashboard
-@enduml
-```
-
-### Component Diagram
-```plantuml
-@startuml
-package "Frontend" {
-    [React App]
-    [Mobile App]
-}
-
-package "Backend" {
-    [API Gateway]
-    [Auth Service]
-    [User Service]
-}
-
-database "PostgreSQL" as DB
-
-[React App] --> [API Gateway]
-[Mobile App] --> [API Gateway]
-[API Gateway] --> [Auth Service]
-[API Gateway] --> [User Service]
-[User Service] --> DB
-@enduml
-```
-
----
-
-## Tips for Better Diagrams
-
-1. **Keep it simple** - Don't overcrowd
-2. **Use consistent naming** - Clear, descriptive labels
-3. **Group related items** - Use subgraphs/packages
-4. **Choose appropriate type** - Match diagram to concept
-5. **Consider audience** - Technical vs. business
-6. **Use colors sparingly** - For emphasis only
-7. **Add legends** - When using symbols/colors
-8. **Maintain hierarchy** - Top-down or left-right flow
-
----
-
-## Rendering Tools
-
-| Tool | URL | Best For |
-|------|-----|----------|
-| Mermaid Live | mermaid.live | Quick editing |
-| PlantUML Server | plantuml.com | PlantUML rendering |
-| Draw.io | draw.io | Manual editing |
-| Excalidraw | excalidraw.com | Hand-drawn style |
-| Lucidchart | lucidchart.com | Professional diagrams |
-
----
-
-## Limitations
-
-- Cannot render images directly
-- Complex layouts may need manual adjustment
-- Limited styling compared to design tools
-- Some diagram types not supported in all tools
-
----
-
-*Built by the Claude Office Skills community. Contributions welcome!*
+# Diagram Creator
+
+## Why This Exists
+
+Diagram requests fail when agents dump generic examples instead of modeling the actual system, mix abstraction levels, or create image-only artifacts that cannot be revised. This skill keeps diagrams source-controlled, focused on one question, and easy to update.
+
+Prefer the smallest diagram that answers the user's request. If the user needs a polished DOCX/PPT-ready figure, use `document-figure-designer` instead; if the task is a full slide deck, use the presentation workflow.
+
+## Decision Gate
+
+- Architecture, C4, deployment, component, sequence, data-flow, ER, class, state, flowchart, timeline, or process source: use this skill.
+- Figure asset inserted into a report, proposal, Word document, PDF, or slide: use `document-figure-designer`, unless the user only asks for Mermaid/PlantUML source.
+- Documentation contract, plan, or cross-module spec that happens to include a diagram: use `spec-driven-planning` for the contract and this skill only for the diagram artifact.
+- Raster image, illustration, screenshot, or visual mockup: use the relevant image, browser, document, or frontend workflow instead.
+
+## Workflow
+
+1. Identify the purpose, audience, target format, and where the diagram will live.
+2. Read the source material before drawing: code, docs, architecture notes, schemas, APIs, workflows, or user-provided facts.
+3. Pick one diagram type and one abstraction level. Do not combine context, component, deployment, and sequence details into one crowded diagram.
+4. Use stable names from the source material. Mark assumptions explicitly instead of inventing services, tables, states, or relationships.
+5. Choose the format that best fits the destination:
+   - Mermaid for Markdown, GitHub, lightweight docs, ER, state, sequence, and flowcharts.
+   - PlantUML for UML-heavy, C4-style, or large component diagrams when Mermaid becomes awkward.
+   - D2 when the repo already uses it or when layout readability matters more than GitHub-native rendering.
+   - ASCII only for quick terminal-safe sketches.
+6. Keep labels short, directional arrows clear, and grouping meaningful. Add a legend only when symbols or colors carry semantics.
+7. If editing an existing diagram, preserve the existing tool and style unless it is the source of the problem.
+8. Validate the syntax when a renderer or CLI is available; otherwise do a focused source review for unclosed blocks, invalid identifiers, and stale names.
+
+## Architecture And System Diagrams
+
+For system design, prefer a sequence of focused views over one large diagram:
+
+- Context view: actors, external systems, and the system boundary.
+- Container or component view: deployable units, modules, services, stores, and major dependencies.
+- Sequence view: one runtime scenario or API interaction.
+- Data-flow view: source, transformation, storage, and consumers.
+- Deployment view: runtime nodes, networks, infrastructure services, and ownership boundaries.
+
+Keep each view honest about its level. A context diagram should not show database tables; a deployment diagram should not explain business workflow decisions.
+
+## Quality Gate
+
+- The diagram answers a specific question and has a clear title or surrounding prose context.
+- Every node, actor, table, state, and edge is grounded in provided source material or clearly marked as an assumption.
+- The diagram uses one abstraction level and avoids unrelated implementation detail.
+- Directionality is clear; arrows are labeled when the relationship is not obvious.
+- Naming matches the repo or source docs.
+- The diagram remains maintainable as text source and is not only a rendered image.
+- Obsolete names from the source material or prior diagram version have been searched when editing existing docs.
+
+## Resources
+
+- `references/architecture-patterns.md`: compact patterns for architecture, C4-style, sequence, data-flow, component, deployment, ER, class, and state diagrams.
+
+Read the reference when creating architecture or system diagrams, when choosing between diagram types, or when revising an existing architecture diagram for consistency.

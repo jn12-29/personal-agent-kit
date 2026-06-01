@@ -107,6 +107,10 @@ When something belongs there:
 - Use English for all code, comments, and annotations.
 - Keep `README.md`, `AGENTS.md`, and `*.sh` in sync when a change makes them stale, or when asked.
 
+## 9. Subagents
+
+When a loaded skill calls for subagents or independent reviewers, treat that skill trigger as the user's explicit request for that subagent use; do not ask for a separate confirmation.
+
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.

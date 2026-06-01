@@ -41,13 +41,9 @@ When a user asks for help with something, identify:
 2. The specific task (e.g., writing tests, creating animations, reviewing PRs)
 3. Whether this is a common enough task that a skill likely exists
 
-### Step 2: Check the Leaderboard First
+### Step 2: Check Current Catalog Signals
 
-Before running a CLI search, check the [skills.sh leaderboard](https://skills.sh/) to see if a well-known skill already exists for the domain. The leaderboard ranks skills by total installs, surfacing the most popular and battle-tested options.
-
-For example, top skills for web development include:
-- `vercel-labs/agent-skills` — React, Next.js, web design (100K+ installs each)
-- `anthropics/skills` — Frontend design, document processing (100K+ installs)
+Before running a CLI search, check the current [skills.sh](https://skills.sh/) catalog or leaderboard when available to see if a well-known skill already exists for the domain. Treat rankings, install counts, source ownership, and repository activity as current signals that must be verified at request time, not facts to hard-code in this skill.
 
 ### Step 3: Search for Skills
 
@@ -67,7 +63,7 @@ For example:
 
 **Do not recommend a skill based solely on search results.** Always verify:
 
-1. **Install count** — Prefer skills with 1K+ installs. Be cautious with anything under 100.
+1. **Install count** — When current install counts are available, prefer established skills and be cautious with low-install or newly published packages.
 2. **Source reputation** — Official sources (`vercel-labs`, `anthropics`, `microsoft`) are more trustworthy than unknown authors.
 3. **GitHub stars** — Check the source repository. A skill from a repo with <100 stars should be treated with skepticism.
 
@@ -76,16 +72,16 @@ For example:
 When you find relevant skills, present them to the user with:
 
 1. The skill name and what it does
-2. The install count and source
+2. Current quality signals such as install count, source, and repository activity when available
 3. The install command they can run
 4. A link to learn more at skills.sh
 
 Example response:
 
 ```
-I found a skill that might help! The "react-best-practices" skill provides
-React and Next.js performance optimization guidelines from Vercel Engineering.
-(185K installs)
+I found a skill that might help. The "react-best-practices" skill provides
+React and Next.js performance optimization guidance. I verified its current
+source and quality signals before recommending it.
 
 To install it:
 npx skills add vercel-labs/agent-skills@react-best-practices

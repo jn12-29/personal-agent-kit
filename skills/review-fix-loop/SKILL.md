@@ -1,6 +1,6 @@
 ---
 name: review-fix-loop
-description: Use whenever a task modifies files — code, documentation, configuration, tests, scripts, prompts, examples, or generated project files. Enforces an explicit review-after-implementation loop with re-review after every fix, so review is never skipped or treated as optional final polish. For independent-review tiers, this skill is standing user authorization to spawn read-only review subagents when subagent tooling exists. Trigger this even for small edits and quick fixes, and whenever the user asks for careful review, correctness, or end-to-end completion.
+description: Use whenever a task modifies files — code, documentation, configuration, tests, scripts, prompts, examples, or generated project files. Enforces an explicit review-after-implementation loop with re-review after every fix, so review is never skipped or treated as optional final polish. For independent-review tiers, spawn read-only review subagents when subagent tooling exists. Trigger this even for small edits and quick fixes, and whenever the user asks for careful review, correctness, or end-to-end completion.
 ---
 
 # Review-Fix Loop
@@ -27,7 +27,7 @@ Authority documents are whatever defines intended behavior for the changed surfa
 
 ## Review Tier
 
-Review intensity should match the blast radius of the change. Over-reviewing trivial edits wastes time and tokens because independent reviewers run their own model and tool calls. Under-reviewing risky edits ships regressions. Pick the tier by the highest matching row.
+Review intensity should match the blast radius of the change. Over-reviewing trivial edits adds coordination cost without meaningful signal. Under-reviewing risky edits ships regressions. Pick the tier by the highest matching row.
 
 | Tier | The change is... | Do this |
 | --- | --- | --- |
@@ -41,7 +41,7 @@ When unsure which tier applies, choose the stricter one.
 
 Independent review means a reviewer that does not carry the implementer's context and therefore cannot rationalize the change as fine because it just wrote it. Use whatever the environment provides: a review subagent, a separate reviewer in a multi-agent setup, a parallel agent thread, or a fresh review pass on a cleared context.
 
-Prefer independent review over main-agent self-review for non-trivial changes. It catches more, and it preserves the main agent's context window for implementation, integration, and final synthesis. This skill records standing user authorization for independent review and read-only review subagents in its non-self-review tiers; treat that as the explicit user request for reviewer subagents in this project, and do not pause to ask whether to review. If the environment exposes a real read-only sandbox or permission mode, run reviewers there so read-only is enforced rather than merely requested.
+Prefer independent review over main-agent self-review for non-trivial changes. It catches more, and it preserves the main agent's context window for implementation, integration, and final synthesis. If the environment exposes a real read-only sandbox or permission mode, run reviewers there so read-only is enforced rather than merely requested.
 
 While independent reviewers are running, do not repeat their assigned review or broad verification locally. Duplicating that work wastes the main context, weakens the value of independent review by letting the main agent form a competing conclusion first, and delays integration work that only the main agent can do. Work on non-overlapping tasks only, then use the reviewer reports to drive focused fixes and the smallest final verification needed.
 
