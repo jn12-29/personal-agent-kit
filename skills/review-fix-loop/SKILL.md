@@ -31,8 +31,8 @@ Review intensity should match the blast radius of the change. Over-reviewing tri
 
 | Tier | The change is... | Do this |
 | --- | --- | --- |
-| Self-review | Single file and localized, with no shared contract, config, script, prompt, test, public-output, or cross-document impact. Behavior impact is absent or contained entirely inside the changed surface, such as wording, comments, a local refactor, or a small localized bug fix. | Re-read the changed surface with fresh eyes against the request and authority documents, then verify. |
-| One independent reviewer | Multiple files, or non-local behavior impact, or touches runtime flags, scheduling, cache semantics, paths, config fields, schemas, serialization, scripts, prompts, tests, or docs that define current behavior. | Get one independent read-only review after implementing, then fix and re-review. |
+| Self-review | Single file and localized, with no shared contract, config, script, prompt, test, public-output, or cross-document impact. Behavior impact is absent or contained entirely inside the changed surface, such as wording, comments, a local refactor, or a small localized bug fix. A comment- or wording-only edit to a test file, with no change to assertions or test behavior, stays in this tier. | Re-read the changed surface with fresh eyes against the request and authority documents, then verify. |
+| One independent reviewer | Multiple files, or non-local behavior impact, or touches runtime flags, scheduling, cache semantics, paths, config fields, schemas, serialization, scripts, prompts, test behavior or assertions, or docs that define current behavior. | Get one independent read-only review after implementing, then fix and re-review. |
 | Two or more independent reviewers | Crosses module boundaries, or affects shared contracts, public behavior, shared types, shared runtime state, pipeline boundaries, user-facing output, or is large enough to need parallel work. | Get at least two independent read-only reviews, each with a different perspective. |
 
 When unsure which tier applies, choose the stricter one.
@@ -97,7 +97,8 @@ Enforce the minimal true contract: the invariants and dependencies that actually
 - Review happens after implementation, not only before.
 - If review finds blockers, fix them and re-review. Do not stop right after the fix.
 - If a review round used independent reviewers, re-run independent read-only review after each blocker fix at the same or stricter tier.
-- If a fix touches a shared contract, public behavior, or module boundary, re-run independent review at the same or stricter tier.
+- If a fix expands the change's blast radius, re-pick the tier from the table and apply the stricter tier's review before continuing.
+- If blockers keep recurring or fixes keep introducing new blockers across several rounds, and in all cases after more than 5 review-fix rounds, stop applying direct minimal fixes and reassess whether architecture, design, contract, or scope is causing the churn. Propose the smallest viable resolution and report it to the user before continuing.
 - Stop when the latest review reports only non-blocking concerns or assumptions, no blockers, and verification passes. Do not keep spawning reviewers to chase diminishing returns; record remaining non-blocking concerns as residual risk.
 - Do not ignore non-blocking concerns by default; fix cheap relevant concerns or explicitly state why each remaining concern is acceptable residual risk.
 - If reviewers disagree, clear every finding that is a true-contract violation. Downgrade the rest to non-blocking concerns or assumptions instead of treating every opinion as a blocker.
