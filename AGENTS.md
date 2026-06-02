@@ -111,6 +111,8 @@ When something belongs there:
 
 When a loaded skill calls for subagents or independent reviewers, treat that skill trigger as the user's explicit request for that subagent use; do not ask for a separate confirmation.
 
+Before any multi-agent delegation, subagent spawning, or independent-review round, read the installed `multi-agent-workflow` skill and follow its context-budget, ownership, prompt, and no-duplicate-work rules.
+
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
