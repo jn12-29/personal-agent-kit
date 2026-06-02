@@ -35,6 +35,12 @@ When uncertain, write the smallest useful plan/spec before implementation. Do no
 10. Update durable progress state at phase boundaries or after meaningful discoveries, verification results, blockers, and goal changes.
 11. If implementation reveals a contract gap or goal drift, pause broad coding, update the requirement snapshot or plan/spec, then resume.
 
+## Why Planning Location Matters
+
+Planning files are dangerous when their status is ambiguous. Agents tend to treat any discovered plan-like file as current instructions, even when it is stale, historical, partial, or superseded. The planning location and active pointer prevent that: they identify the current requirement snapshot, distinguish progress from authority, and keep scratch evidence from becoming part of the plan contract.
+
+Use `.planning/` for durable planning state only. Do not store raw logs, bulky extracts, one-off scripts, or general scratch outputs there; put them in the working-artifact location and link to them when they affect the plan.
+
 ## Where To Write
 
 Follow existing repo conventions first.

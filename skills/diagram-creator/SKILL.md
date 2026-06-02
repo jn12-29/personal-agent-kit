@@ -1,6 +1,6 @@
 ---
 name: diagram-creator
-description: Create or revise text-based diagrams for documentation, specs, architecture notes, workflows, data flows, sequence interactions, C4 views, ER/class/state models, and lightweight timelines using Mermaid, PlantUML, D2, or ASCII. Use when the requested output is diagram source code or a maintainable diagram embedded in Markdown/docs. Do not use for polished document figures, raster image generation, slide-deck design, or UI mockups.
+description: Create or revise text-based diagrams for documentation, specs, architecture notes, workflows, data flows, sequence interactions, C4 views, ER/class/state models, and lightweight timelines using Mermaid, PlantUML, D2, or ASCII. Use when the requested output is diagram source code or a maintainable diagram embedded in Markdown/docs. Do not own final quality for polished document/PPT figures, raster image generation, slide-deck design, or UI mockups.
 ---
 
 # Diagram Creator
@@ -9,12 +9,12 @@ description: Create or revise text-based diagrams for documentation, specs, arch
 
 Diagram requests fail when agents dump generic examples instead of modeling the actual system, mix abstraction levels, or create image-only artifacts that cannot be revised. This skill keeps diagrams source-controlled, focused on one question, and easy to update.
 
-Prefer the smallest diagram that answers the user's request. If the user needs a polished DOCX/PPT-ready figure, use `document-figure-designer` instead; if the task is a full slide deck, use the presentation workflow.
+Prefer the smallest diagram that answers the user's request. Mermaid, PlantUML, or D2 can be useful as source-only outputs or intermediate sources for simple figure diagrams, but if the user needs a polished DOCX/PPT-ready asset, `document-figure-designer` owns the final rendered quality; if the task is a full slide deck, use the presentation workflow.
 
 ## Decision Gate
 
 - Architecture, C4, deployment, component, sequence, data-flow, ER, class, state, flowchart, timeline, or process source: use this skill.
-- Figure asset inserted into a report, proposal, Word document, PDF, or slide: use `document-figure-designer`, unless the user only asks for Mermaid/PlantUML source.
+- Figure asset inserted into a report, proposal, Word document, PDF, or slide: use `document-figure-designer`, unless the user only asks for Mermaid/PlantUML/D2 source. Text-based diagram source may still be an intermediate artifact, but final document/slide readability and layout QA belong to `document-figure-designer`.
 - Documentation contract, plan, or cross-module spec that happens to include a diagram: use `spec-driven-planning` for the contract and this skill only for the diagram artifact.
 - Raster image, illustration, screenshot, or visual mockup: use the relevant image, browser, document, or frontend workflow instead.
 
