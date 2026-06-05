@@ -1,6 +1,6 @@
 ---
 name: document-figure-designer
-description: Create, revise, and quality-check explanatory figures for documents and slides. Use for architecture, workflow, process, API, data-flow, algorithm, concept figures, DOCX/PDF/PPT-ready PNG/SVG assets, figure-caption cleanup tied to figure creation or replacement, readability QA, arrow routing, or replacing inaccurate illustrations. Not for whole-slide, whole-page, or whole-deck layout/design.
+description: Create, revise, and quality-check explanatory figure assets for documents and slides. Use for architecture, workflow, process, API, data-flow, algorithm, concept figures, DOCX/PDF/PPT-ready PNG/SVG assets, figure-caption cleanup tied to figure creation or replacement, readability QA, arrow routing, or replacing inaccurate illustrations. Not for whole-slide, whole-page, whole-deck layout/design, or slide/page-level titles inside exported figures by default.
 ---
 
 # Document Figure Designer
@@ -8,6 +8,16 @@ description: Create, revise, and quality-check explanatory figures for documents
 ## Overview
 
 Use this skill to produce figures that are accurate, readable at document scale, and easy to revise. It applies to figures embedded in documents or slides, but not to overall slide theme or deck beautification. The figure should explain the surrounding content clearly, sit naturally in its container, avoid decorative backgrounds by default, and remain legible after insertion into DOCX, PDF, or slides.
+
+## Figure Boundary
+
+This skill produces figure assets, not slide or page layouts. Agents often make figures look self-contained by adding global slide titles, subtitles, captions, logos, or explanatory prose into the exported canvas. That makes the asset fight the surrounding PPT/DOCX/PDF layout and wastes figure space that should carry the diagram itself.
+
+By default, do not include slide-level or page-level titles, subtitles, captions, logos, headers, footers, or surrounding explanatory prose inside the exported figure. Assume those belong outside the figure in the target document or slide layout.
+
+Allowed inside the figure: panel headers, swimlane labels, axis labels, stage labels, legends, node labels, and short group labels required to understand the diagram structure.
+
+Not allowed by default: global page titles, deck-style subtitles, prose summaries, decorative title bands, captions, logos, or other text that describes the figure from outside the diagram. Include them only when the user explicitly asks for a complete slide/page design or for those elements to be part of the figure itself.
 
 ## Workflow
 
@@ -24,6 +34,8 @@ Use this skill to produce figures that are accurate, readable at document scale,
 
 3. Design for document scale.
    - For standalone figure assets intended for Word, PDF, or slides, default to a 16:9 canvas at 1920x1080 unless the user, target placeholder, or document template requires another size. Treat the canvas as the figure itself, not the surrounding document or slide layout: do not reserve empty outer space for titles, logos, captions, or nearby prose. Keep only the internal padding needed so labels, arrows, and blocks do not touch the canvas edge or get cropped.
+   - Do not draw slide/page titles or subtitles inside the figure canvas by default. This is not only about avoiding reserved whitespace; title-like text that belongs to the surrounding document must stay outside the exported figure.
+   - Before rendering, classify every large text element as either a diagram-internal label or surrounding layout text. Keep labels required to interpret panels, groups, axes, stages, or nodes. Remove slide/page titles, subtitles, captions, logos, and nearby prose unless explicitly requested.
    - Every label must remain legible at the final inserted size; if text becomes small, simplify the figure instead of shrinking labels. Screenshots are exempt from generated-label font-size rules, but must still be readable at the inserted size.
    - Use a stable canvas and fill the figure canvas. Avoid decorative backgrounds by default; use subtle fills or section bands only when they clarify grouping or reading order without reducing text contrast.
    - Use larger cards and fewer tiny labels instead of dense microtext.
@@ -78,7 +90,12 @@ Context:
 - Must-preserve facts: ...
 
 Perspective:
-- readability/layout | communication accuracy | visual polish
+- readability/layout | communication accuracy | visual polish | figure-boundary
+
+For figure-boundary, check:
+- Does the exported figure include slide/page-level title, subtitle, caption, logo, header/footer, or surrounding prose?
+- Are all large labels necessary diagram-internal labels?
+- Does the figure reserve or consume space for content that should live outside the figure?
 
 Report only:
 - [blocker] <region/element> - <visible problem> - <actionable fix direction>
@@ -92,11 +109,16 @@ No blockers.
 ## Visual Standards
 
 - Generated diagram body text: usually at least 24 px in the source canvas; prefer 26-32 px for Chinese labels. Every label must remain legible at the final inserted size.
-- Section titles and major node labels: usually 34 px or larger.
+- Figure section/group titles and major node labels: usually 34 px or larger.
 - Arrowheads: visually obvious at final document size; as a starting point, marker width/height should be 14 px or larger in SVG. Keep arrowheads clear of labels and block edges.
 - Line weight: thick enough to survive Word/PDF compression, usually 3-5 px for full-width diagrams.
 - Layout: no nested cards for page sections, no decorative background unless it clarifies grouping or reading order without reducing contrast, no tiny legends, no text touching borders or connector lines.
+- Figure boundary: standalone figure exports must not include slide/page titles, subtitles, captions, logos, headers/footers, or surrounding explanatory prose by default. Panel titles and diagram-internal labels are allowed only when they are necessary to understand the figure structure.
 - Palette: polished and restrained, with enough contrast; avoid one-note palettes that make every block look the same.
+
+Examples:
+- Allowed: "v1 Baseline", "v2 Upgrade", "Input", "Verifier", "Shared JSONL" when these label parts of the diagram.
+- Not allowed by default: "Contrastive Text Dataset Construction" as a page title, "Two pipelines produce..." as a slide subtitle, or a caption explaining the figure from outside the diagram.
 
 ## Resources
 

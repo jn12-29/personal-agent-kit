@@ -1,4 +1,4 @@
 interface:
   display_name: "Document Figure Designer"
-  short_description: "Design and QA doc and slide figures"
-  default_prompt: "Use $document-figure-designer to create, render, visually review, and verify polished figures for this technical document or slide deck."
+  short_description: "Design and QA document figure assets"
+  default_prompt: "Use $document-figure-designer to create, render, visually review, and verify polished figure assets for this technical document or slide deck, without adding slide/page-level titles inside the exported figure by default."
