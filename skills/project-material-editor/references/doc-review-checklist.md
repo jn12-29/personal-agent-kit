@@ -10,6 +10,8 @@ Use this checklist when a project proposal, grant application, university-indust
 - Identify the target use: application, contract, planning, review, technical design, execution, report, acceptance, delivery, communication, or presentation material.
 - Identify source materials that can be reused for structure versus materials that are only references.
 - Classify source materials as evidence, constraints, or process metadata before reusing them. Evidence can support content; constraints guide structure and coverage; process metadata is excluded from final-facing prose unless the target document is meant to expose that process.
+- Identify the authoritative source when both editable sources and exported or binary deliverables exist.
+- Classify DOCX, PPTX, XLSX, PDF, and similar files as generated deliverables, authoritative sources, evidence-only records, or submission artifacts before editing or recommending repository tracking.
 - Identify required templates, fixed fields, section order, numbering, table layout, and word limits that must not be changed.
 - Leave required template fields in place even when content is pending.
 - Preserve useful figure captions/placeholders when the user plans to add art later.
@@ -39,6 +41,17 @@ Use this checklist when a project proposal, grant application, university-indust
 - Useful process facts are converted into reader-relevant substance. For example, an internal reproducibility concern becomes a concise limitation or method boundary, not a note about logs, paths, or how the document was checked.
 - Each paragraph serves the target reader's decision, understanding, compliance need, or operating task.
 
+## Source And Export Checks
+
+- Prefer Markdown, LaTeX, Quarto, source templates, scripts, structured data, or other editable text sources when they generate final DOCX, PPTX, XLSX, PDF, or similar deliverables.
+- When Markdown or another text source generates exported deliverables, keep the export command, required tool, template or reference file, and project-relative output path in project-facing documentation or a generation script.
+- Prefer commands run from the project root with relative paths for in-project inputs, templates, scripts, and outputs; avoid user- or machine-specific absolute paths unless an external artifact is required.
+- Keep export commands and file-generation notes out of final-facing prose unless the target document is itself a procedure, delivery guide, or maintenance note.
+- Treat generated DOCX, PPTX, XLSX, PDF, and similar files as derived deliverables by default. Do not recommend normal Git tracking for derived binary deliverables unless project policy requires it, because semantic diffs and merges are not useful.
+- When a DOCX, PPTX, or XLSX file is the only authoritative source, preserve timestamped snapshots and keep a text manifest or change note with timestamp, source, purpose, and human-readable change summary.
+- Preserve signed, submitted, scanned, or official evidence files as records. If repository tracking is required for authoritative binary files, prefer Git LFS or a dedicated snapshots/artifacts directory.
+- When both a source file and exported deliverable exist, report whether the export was regenerated, intentionally left stale, or intentionally ignored by repository policy.
+
 ## DOCX-Specific Checks
 
 - Extract text before editing and after editing; do not rely only on visual inspection.
@@ -63,16 +76,17 @@ external responsibilities claimed as current or proposed project work
 TODO / placeholder / 原项目 / 转换层 / 待补充
 draft status / pending confirmation / authoring workflow / internal review checklist / scoring rubric / template instruction
 file-generation note / generated file / format conversion note / submission coordination / format synchronization / log path / checkpoint / audit trail
+authoritative source / derived deliverable / export command / regeneration path / timestamped snapshot / absolute path / project-relative path
 ```
 
 For Markdown:
 
 ```bash
-rg -n "TERM1|TERM2|TODO|原项目|转换层|待补充|待确认|草稿|占位|draft status|pending confirmation|file-generation|generated file|submission coordination|format synchronization|checkpoint|audit trail" docs README.md
+rg -n "TERM1|TERM2|TODO|原项目|转换层|待补充|待确认|草稿|占位|draft status|pending confirmation|file-generation|generated file|submission coordination|format synchronization|checkpoint|audit trail|authoritative source|derived deliverable|export command|regeneration path|timestamped snapshot|absolute path|project-relative path" docs README.md
 ```
 
 For DOCX:
 
 ```bash
-python path/to/project-material-editor/scripts/docx_inventory.py document.docx --terms TERM1 TERM2 转换层
+python scripts/docx_inventory.py docs/document.docx --terms TERM1 TERM2 转换层
 ```
