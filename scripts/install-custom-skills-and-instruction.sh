@@ -82,11 +82,30 @@ ensure_real_directory() {
   mkdir -p "$dst"
 }
 
+cleanup_stale_claude_skills() {
+  local src_dir="$1" dst_dir="$2"
+  local entry target
+
+  for entry in "$dst_dir"/*; do
+    [ -L "$entry" ] || continue
+    target="$(readlink "$entry")" || continue
+    case "$target" in
+      "$src_dir"/*)
+        if [ ! -e "$target" ]; then
+          rm "$entry"
+          echo "Removed stale Claude skill link: $entry → $target"
+        fi
+        ;;
+    esac
+  done
+}
+
 install_claude_skills() {
   local src_dir="$1" dst_dir="$2" backup_dir="$3"
   [ -d "$src_dir" ] || { echo "⚠ skills directory missing, skipped: $src_dir"; return; }
 
   ensure_real_directory "$dst_dir"
+  cleanup_stale_claude_skills "$src_dir" "$dst_dir"
 
   local skill skill_name found=0
   for skill in "$src_dir"/*; do

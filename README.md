@@ -44,7 +44,11 @@ Here `<repo>` is the cloned repo directory that contains the script being run.
 - `~/.config/opencode/AGENTS.md` -> `<repo>/GLOBAL_AGENTS.md`
 - `~/.claude/CLAUDE.md` -> `<repo>/GLOBAL_AGENTS.md`
 
-Existing targets are backed up as `.bak.<timestamp>` before replacement, including `~/.agents/skills`. For Claude skills, `~/.claude/skills` is kept as a real directory; if it already exists as a file or whole-directory link, it is backed up before per-skill links are installed. Per-skill Claude conflicts are backed up outside the scanned skills directory, under `~/.claude/skills-backups/<skill-name>.bak.<timestamp>`. Existing old backups under `~/.claude/skills` are not migrated automatically. The install scripts do not silently fall back when linking fails: macOS/Linux prints the symlink failure and asks before copying as a fallback; Windows prints the failure reason and asks before using a junction, hard link, or copy fallback. If fallback is declined or fails, the backup is restored.
+Existing targets are backed up as `.bak.<timestamp>` before replacement, including `~/.agents/skills`. For Claude skills, `~/.claude/skills` is kept as a real directory; if it already exists as a file or whole-directory link, it is backed up before per-skill links are installed. Per-skill Claude conflicts are backed up outside the scanned skills directory, under `~/.claude/skills-backups/<skill-name>.bak.<timestamp>`.
+
+Rerunning the install script synchronizes Claude skills by removing stale links or junctions in `~/.claude/skills` that point into `<repo>/skills/` when the linked target no longer exists. User-installed skills, ordinary directories, links to other locations, and copy fallback directories whose origin cannot be proven are left in place.
+
+The install scripts do not silently fall back when linking fails: macOS/Linux prints the symlink failure and asks before copying as a fallback; Windows prints the failure reason and asks before using a junction, hard link, or copy fallback. If fallback is declined or fails, the backup is restored.
 
 To overwrite local config files from `config/`, with backups:
 

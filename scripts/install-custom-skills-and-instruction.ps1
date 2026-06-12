@@ -28,7 +28,7 @@ function Backup-Path {
 
     $BackupPath.Value = $null
 
-    if (-not (Test-Path -LiteralPath $Path)) {
+    if (-not (Get-Item -LiteralPath $Path -Force -ErrorAction SilentlyContinue)) {
         return
     }
 
@@ -50,11 +50,11 @@ function Remove-InstalledPath {
         [string]$Path
     )
 
-    if (-not (Test-Path -LiteralPath $Path)) {
+    $item = Get-Item -LiteralPath $Path -Force -ErrorAction SilentlyContinue
+    if (-not $item) {
         return
     }
 
-    $item = Get-Item -LiteralPath $Path -Force
     if ($item.LinkType) {
         if ($item.PSIsContainer) {
             [System.IO.Directory]::Delete($item.FullName)
@@ -246,6 +246,60 @@ function Ensure-RealDirectory {
     New-Item -ItemType Directory -Path $Path -Force | Out-Null
 }
 
+function Remove-StaleClaudeSkills {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$SourceDirectory,
+        [Parameter(Mandatory = $true)]
+        [string]$DestinationDirectory
+    )
+
+    $separator = [string][System.IO.Path]::DirectorySeparatorChar
+    $sourceRoot = Resolve-FullPath $SourceDirectory
+    if (-not $sourceRoot.EndsWith($separator)) {
+        $sourceRoot = "$sourceRoot$separator"
+    }
+
+    $comparison = if ([System.IO.Path]::DirectorySeparatorChar -eq "\") {
+        [System.StringComparison]::OrdinalIgnoreCase
+    } else {
+        [System.StringComparison]::Ordinal
+    }
+
+    $items = Get-ChildItem -LiteralPath $DestinationDirectory -Force -ErrorAction SilentlyContinue
+    foreach ($item in $items) {
+        if ($item.LinkType -ne "SymbolicLink" -and $item.LinkType -ne "Junction") {
+            continue
+        }
+
+        $target = $item.Target
+        if ($target -is [System.Array]) {
+            $target = $target[0]
+        }
+        if (-not $target) {
+            continue
+        }
+
+        if ([System.IO.Path]::IsPathRooted($target)) {
+            $targetPath = $target
+        } else {
+            $targetPath = Join-Path (Split-Path -Parent $item.FullName) $target
+        }
+
+        $targetFullPath = Resolve-FullPath $targetPath
+        if (-not $targetFullPath.StartsWith($sourceRoot, $comparison)) {
+            continue
+        }
+
+        if (Test-Path -LiteralPath $targetFullPath) {
+            continue
+        }
+
+        Remove-InstalledPath $item.FullName
+        Write-Output "Removed stale Claude skill link: $($item.FullName) -> $target"
+    }
+}
+
 function Install-ClaudeSkills {
     param(
         [Parameter(Mandatory = $true)]
@@ -260,6 +314,7 @@ function Install-ClaudeSkills {
     }
 
     Ensure-RealDirectory $DestinationDirectory
+    Remove-StaleClaudeSkills $SourceDirectory $DestinationDirectory
 
     $skills = Get-ChildItem -LiteralPath $SourceDirectory -Directory
     if (-not $skills) {
