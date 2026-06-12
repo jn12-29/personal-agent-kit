@@ -86,34 +86,12 @@ Before finishing a docs edit, grep the file for obsolete terms and remove them.
 - After extracting a module, verify it still imports/builds before moving on.
 - Project-specific (e.g. Python CLIs): keep the entry point thin — `parse_args` + `main` in a file nothing else imports.
 
-## 7. Writing and maintaining AGENTS.md
-
-A project's (repo-level) AGENTS.md holds operational context and judgment an agent can't get from that repo's code, toolchain, or README.
-Route each fact by scope and volatility — most "helpful detail" belongs elsewhere:
-
-- Local to one function or file → a comment or docstring at that spot, never here; it rots fast and must update in the same diff as the code.
-- Enforced by a tool (formatting, lint, types) → the tool's config, not restated.
-- Already covered by this user-level AGENTS.md → don't repeat it.
-- What the project is / human onboarding → README.
-- In-flight or volatile → the issue tracker.
-- Stable, cross-cutting, agent-facing → the project's AGENTS.md: build/test commands, where things live, conventions the agent keeps getting wrong, ask-first / never actions.
-
-When something belongs there:
-
-- Be concrete — exact commands and a clear "done" check, not vague directives.
-- State the why only when it changes behavior.
-- Grow it from real mistakes; delete rules once the friction is gone.
-- Treat it as code: update it in the same change that alters a convention.
-- Keep it lean — a long file dilutes the weight of every line.
-- Monorepo: agents load the nearest file up the tree — keep the root thin, push specifics into per-package files.
-
-## 8. Personal Preferences
+## 7. Personal Preferences
 
 - Communicate with me in Chinese. Mixing in English is fine.
 - Use English for all code, comments, and annotations.
-- Keep `README.md`, `AGENTS.md`, and `*.sh` in sync when a change makes them stale, or when asked.
 
-## 9. Subagents
+## 8. Subagents
 
 When a loaded skill calls for subagents or independent reviewers, treat that skill trigger as the user's explicit request for that subagent use; do not ask for a separate confirmation.
 

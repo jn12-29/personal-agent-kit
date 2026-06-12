@@ -8,7 +8,7 @@ It keeps tool-neutral shared agent instructions, custom skills, and example conf
 
 - `AGENTS.md`: project-specific instructions for maintaining this repository.
 - `GLOBAL_AGENTS.md`: shared global agent behavior guidelines installed by current scripts into Codex, OpenCode, and Claude Code instruction load paths.
-- `skills/`: custom skills for reviews, contract checks, multi-agent work, and skill discovery across compatible agent tools.
+- `skills/`: custom skills for reviews, contract checks, documentation maintenance, multi-agent work, and skill discovery across compatible agent tools.
 - `config/`: example Codex and OpenCode config files; Claude Code currently uses shared instructions and skills from this repo rather than a separate config example.
 - `scripts/install-custom-skills-and-instruction.sh`: links instructions and skills into local tool directories.
 - `scripts/install-custom-skills-and-instruction.ps1`: Windows PowerShell version of the install/link script.
