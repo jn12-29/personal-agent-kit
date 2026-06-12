@@ -58,6 +58,8 @@ When docs conflict, prefer the file that owns the fact. If ownership is unclear,
 ## AGENTS Rules
 
 - Keep agent instructions lean, actionable, and repo-specific. Prefer command tables, path tables, and one rule per bullet.
+- Do not duplicate existing `AGENTS.md` files that already apply, system/developer instructions, or active skill/capability instructions. Add only repo-local facts, constraints, commands, paths, and pitfalls that are not already supplied by those sources.
+- When creating or updating an `AGENTS.md`, first ask what a future agent would get wrong in this exact repo without the line. If the answer is only a general work habit, workflow method, or already-loaded `AGENTS.md` or skill instruction, leave it out.
 - Use exact repo-relative paths. Avoid vague references like "see docs" without naming the file.
 - Reference README, CONTRIBUTING, specs, policies, or architecture docs instead of copying their prose.
 - Prefer file-scoped test, lint, typecheck, or build commands when they exist; list full-suite commands only when narrower checks are unavailable or necessary.
@@ -72,6 +74,7 @@ Before finishing, confirm:
 
 - Each changed fact has one clear owner and no conflicting duplicate remains.
 - README content is useful to humans; AGENTS content is useful to agents.
+- New or changed AGENTS content is not copied from existing applicable AGENTS files, system/developer guidance, or active skill/capability instructions unless a brief repo-local override is explicitly needed.
 - Commands, paths, filenames, install destinations, and local links are verified or explicitly reported as unverified.
 - No changelog-style language was added unless requested.
 - No generated template placeholders, obsolete terms, or stale status claims remain in changed files.
