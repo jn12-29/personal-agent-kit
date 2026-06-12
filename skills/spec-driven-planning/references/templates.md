@@ -5,6 +5,7 @@ Use these templates when writing durable requirement, plan, spec, or agent hando
 ## Contents
 
 - [Requirement Snapshot](#requirement-snapshot)
+- [Progress Template](#progress-template)
 - [Plan Template](#plan-template)
 - [Spec Template](#spec-template)
 - [Agent Handoff Template](#agent-handoff-template)
@@ -24,6 +25,23 @@ Use this at the top of durable plans/specs, or in `requirement.md` when using `.
 - Plan files to implement:
 - Reference-only or historical files:
 - Final acceptance check:
+```
+
+## Progress Template
+
+Use this for durable `progress.md` files. Keep it focused on recovery state, blockers, verification, and the next checkpoint; do not restate the requirement contract, duplicate the implementation plan, store raw logs, or paste bulky evidence. Link to concise planning notes or working artifacts when detail matters.
+
+```markdown
+## Progress State
+- Current phase:
+- Completed:
+- Remaining:
+- Blockers:
+- Last verification:
+- Next checkpoint:
+
+## Progress Log
+- <date/time>: <meaningful state change, discovery, blocker, decision, or verification result>
 ```
 
 ## Plan Template

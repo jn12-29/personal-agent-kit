@@ -17,6 +17,7 @@ import sys
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Sequence
 from xml.etree import ElementTree as ET
 
 
@@ -35,6 +36,10 @@ STYLES_PART = "word/styles.xml"
 NUMBERING_PART = "word/numbering.xml"
 REL_HYPERLINK = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink"
 REL_IMAGE = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"
+
+
+class HelpFormatter(argparse.ArgumentDefaultsHelpFormatter, argparse.RawDescriptionHelpFormatter):
+    """Keep examples readable while showing defaults."""
 
 
 @dataclass(frozen=True)
@@ -492,10 +497,43 @@ def default_output(docx: Path) -> Path:
     return docx.with_name(f"{docx.stem}.from-docx.md")
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+def build_parser() -> argparse.ArgumentParser:
+    epilog = """\
+Examples:
+  Convert a DOCX to Markdown without overwriting an existing .md:
+    python skills/project-material-editor/scripts/docx_to_md.py docs/report.docx
+
+  Choose output and media locations explicitly:
+    python skills/project-material-editor/scripts/docx_to_md.py docs/report.docx -o review/report.md --media-dir review/report_media
+
+  Replace an existing Markdown output intentionally:
+    python skills/project-material-editor/scripts/docx_to_md.py docs/report.docx -o docs/report.md --overwrite
+
+  Extract text only:
+    python skills/project-material-editor/scripts/docx_to_md.py docs/report.docx --no-media --plain-inline
+
+Defaults and behavior:
+  - Run from the project root with project-relative paths when possible.
+  - Default output is <docx stem>.md when that file is free; otherwise it is
+    <docx stem>.from-docx.md.
+  - Existing Markdown output is not overwritten unless --overwrite is passed.
+  - Media is extracted by default to <output stem>_media and linked relative to the output file.
+  - This script reads the DOCX package directly and does not require Word, LibreOffice, Pandoc,
+    or python-docx.
+  - Exit codes: 0 success, 2 invalid input, unsafe overwrite, or unreadable DOCX.
+"""
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        epilog=epilog,
+        formatter_class=HelpFormatter,
+    )
     parser.add_argument("docx", type=Path, help="DOCX source file.")
-    parser.add_argument("-o", "--output", type=Path, help="Markdown output path. Defaults to the DOCX stem.")
+    parser.add_argument(
+        "-o",
+        "--output",
+        type=Path,
+        help="Markdown output path. Default avoids overwriting an existing same-stem .md.",
+    )
     parser.add_argument("--overwrite", action="store_true", help="Allow overwriting an existing Markdown output file.")
     parser.add_argument(
         "--media-dir",
@@ -514,7 +552,12 @@ def main() -> int:
         action="store_true",
         help="Do not emit Markdown bold/italic markers from DOCX run formatting.",
     )
-    args = parser.parse_args()
+    return parser
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    parser = build_parser()
+    args = parser.parse_args(argv)
 
     docx = args.docx.resolve()
     if not docx.exists():
@@ -527,14 +570,18 @@ def main() -> int:
     output.parent.mkdir(parents=True, exist_ok=True)
     media_dir = None if args.no_media else (args.media_dir or output.with_name(f"{output.stem}_media")).resolve()
 
-    return convert_docx(
-        docx=docx,
-        output=output,
-        media_dir=media_dir,
-        extract_media=not args.no_media,
-        heading_offset=args.heading_offset,
-        inline_styles=not args.plain_inline,
-    )
+    try:
+        return convert_docx(
+            docx=docx,
+            output=output,
+            media_dir=media_dir,
+            extract_media=not args.no_media,
+            heading_offset=args.heading_offset,
+            inline_styles=not args.plain_inline,
+        )
+    except (zipfile.BadZipFile, ET.ParseError, RuntimeError, SystemExit) as exc:
+        print(f"Could not convert DOCX: {exc}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

@@ -26,6 +26,7 @@ Project-specific instructions for maintaining this repository.
 
 ## Verification
 
+- For Python script changes under `skills/*/scripts/`, run `python -m py_compile <changed scripts>` and the relevant script `--help` commands. When tests exist, run `uv run --with pytest [--with <test dependency>] python -m pytest <tests>`.
 - For Bash script changes, run `bash -n <script>`.
 - For install-path or instruction-file changes, run `rg -n "AGENTS\\.md|GLOBAL_AGENTS\\.md|CLAUDE\\.md" README.md scripts AGENTS.md GLOBAL_AGENTS.md` and confirm the source and destination paths agree.
 - Before finishing documentation changes, search the changed files for stale filenames or obsolete install mappings.

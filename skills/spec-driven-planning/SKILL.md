@@ -35,6 +35,17 @@ When uncertain, write the smallest useful plan/spec before implementation. Do no
 10. Update durable progress state at phase boundaries or after meaningful discoveries, verification results, blockers, and goal changes.
 11. If implementation reveals a contract gap or goal drift, pause broad coding, update the requirement snapshot or plan/spec, then resume.
 
+## How To Read Existing Planning State
+
+When existing planning state may matter, read it in this order:
+
+1. Resolve the active plan pointer or active requirement before using any plan-like file as instructions.
+2. Read `requirement.md` first; it owns the current target, status, validity, non-goals, final acceptance check, and active plan files.
+3. Read only the plan or spec files named by the active requirement as implementation targets.
+4. Read `progress.md` for current phase, completed checks, blockers, verification results, and remaining work; do not treat it as a source of new requirements.
+5. Read `planning-notes.md` only for concise planning context that affects or justifies the active requirement, plan, spec, contract, or handoff.
+6. Classify any other plan-like files as reference-only, progress/history, stale, or superseded before using them.
+
 ## Why Planning Location Matters
 
 Planning files are dangerous when their status is ambiguous. Agents tend to treat any discovered plan-like file as current instructions, even when it is stale, historical, partial, or superseded. The planning location and active pointer prevent that: they identify the current requirement snapshot, distinguish progress from authority, and keep scratch evidence from becoming part of the plan contract.
@@ -46,9 +57,9 @@ Use `.planning/` for durable planning state only. Do not store raw logs, bulky e
 Follow existing repo conventions first.
 
 - Use an inline chat plan for small, short-lived tasks.
-- For durable work without an existing convention, use `.planning/<plan-id>/` with `.planning/.active_plan`, `requirement.md`, `plan.md`, `progress.md`, and optional `findings.md`; read [planning-state.md](references/planning-state.md) first. Use `YYYY-MM-DD-short-slug` for `<plan-id>` unless the repo or tool provides a stable id.
+- For durable work without an existing convention, use `.planning/<plan-id>/` with `.planning/.active_plan`, `requirement.md`, `plan.md`, `progress.md`, and optional `planning-notes.md`; read [planning-state.md](references/planning-state.md) first. Use `YYYY-MM-DD-short-slug` for `<plan-id>` unless the repo or tool provides a stable id.
 - Put user-requested formal plan/spec deliverables where the user or repo expects them, not only inside ignored `.planning/` state. Link to those deliverables from `.planning/<plan-id>/requirement.md` or `plan.md` when durable state is also useful.
-- Keep `.planning/` for requirement, plan, spec, progress, and concise planning-relevant findings that affect the requirement, plan, spec, contract, or handoff. Put general scratch data, raw extracts, one-off scripts, logs, and bulky intermediate outputs under the repo's working-artifact convention, such as `.work/<task-slug>/`, and link to them instead of duplicating them.
+- Keep `.planning/` for requirement, plan, spec, progress, and concise planning notes that affect the requirement, plan, spec, contract, or handoff. Put general scratch data, raw extracts, one-off scripts, logs, and bulky intermediate outputs under the repo's working-artifact convention, such as `.work/<task-slug>/`, and link to them instead of duplicating them.
 - If the repo already separates requirements from plans, write the snapshot in that requirements document and link to it from the plan/spec.
 - If the repo has a mature planning/spec convention that conflicts with `.planning/`, follow the repo convention but keep the same active-pointer and requirement/progress semantics where possible.
 
@@ -58,7 +69,7 @@ Treat active plan/spec docs as current-state source-of-truth documents, not chan
 
 ## References
 
-- Read [planning-state.md](references/planning-state.md) before creating durable planning state, resolving `.planning/.active_plan`, classifying old plan files, or deciding where `requirement.md`, `plan.md`, `progress.md`, and `findings.md` belong.
+- Read [planning-state.md](references/planning-state.md) before creating durable planning state, resolving `.planning/.active_plan`, classifying old plan files, or deciding where `requirement.md`, `plan.md`, `progress.md`, and `planning-notes.md` belong.
 - Read [templates.md](references/templates.md) before writing durable requirement snapshots, implementation plans, technical specs, document interface tables, or subagent handoff prompts.
 
 ## Quality Gate

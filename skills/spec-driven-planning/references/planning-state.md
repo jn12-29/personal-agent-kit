@@ -13,7 +13,7 @@ Prefer existing repo conventions first. If no convention exists and durable stat
     requirement.md
     plan.md
     progress.md
-    findings.md  # optional
+    planning-notes.md  # optional
 ```
 
 `.planning/.active_plan` contains only the active plan directory name, for example:
@@ -47,9 +47,9 @@ If the active `requirement.md` says `complete`, `paused`, `reference-only`, or `
 - `requirement.md`: current goal contract. It owns the requirement snapshot, target status, validity, non-goals, final acceptance check, and which plan files are active.
 - `plan.md`: work breakdown, task interfaces, spec links, and handoff blocks. It is executable only while `requirement.md` is active and names it as an implementation target.
 - `progress.md`: chronological progress, current phase, completed checks, blockers, verification results, and remaining work.
-- `findings.md`: optional concise findings that affect the requirement, plan, spec, contract, or handoff, plus source links and decisions that would otherwise be lost from context.
+- `planning-notes.md`: optional concise planning notes that affect the requirement, plan, spec, contract, or handoff, plus source links and decisions that would otherwise be lost from context.
 
-Write planning-relevant facts to `findings.md` when exploration itself changes or justifies the plan. Put raw browser/PDF/image extracts, logs, bulky data, one-off scripts, and intermediate outputs in the repo's working-artifact location, such as `.work/<task-slug>/`, and link to them. Write action and verification status to `progress.md`. Keep `requirement.md` short and authoritative; do not let it become a session log.
+Write planning-relevant facts to `planning-notes.md` when exploration itself changes or justifies the plan. Put raw browser/PDF/image extracts, logs, bulky data, one-off scripts, and intermediate outputs in the repo's working-artifact location, such as `.work/<task-slug>/`, and link to them. Write action and verification status to `progress.md`. Keep `requirement.md` short and authoritative; do not let it become a session log.
 
 ## Authority Classes
 
