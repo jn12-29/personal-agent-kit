@@ -76,7 +76,6 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ## 5. Documentation hygiene
 
-Treat docs as the source of truth for the _current_ design, not a changelog.
 Write the final desired state only — no migration notes, deprecated names, or explanations of removed behavior unless explicitly asked; put historical context in the chat reply instead.
 Before finishing a docs edit, grep the file for obsolete terms and remove them.
 
