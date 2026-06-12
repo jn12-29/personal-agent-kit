@@ -72,6 +72,7 @@ This skill does not provide final legal, policy, budget, or external compliance 
 
 - `scripts/docx_inventory.py`: inspect `.docx` text, heading candidates, captions, media files, and term occurrences.
 - `scripts/md_to_docx.py`: convert Markdown to DOCX from the project root; by default it uses a style-driven `python-docx` renderer for common report blocks, including headings, paragraphs, simple lists, local images, figure captions, table captions, and pipe tables. Use `--pandoc` or `--reference-doc` when Pandoc coverage or a reference DOCX template is required.
+- `scripts/docx_to_md.py`: convert DOCX to clean Markdown for review or recovery; it extracts common headings, paragraphs, lists, tables, hyperlinks, basic inline emphasis, and media references directly from the DOCX package. By default it writes `<stem>.from-docx.md` instead of overwriting an existing `<stem>.md`; use `--overwrite` only when replacing the Markdown output is intended.
 - `references/doc-review-checklist.md`: detailed review checklist for adapting and validating project materials.
 
 Read the reference when the task involves a full material review, a DOCX, a proposal/application/report, or a document adapted from another project.
