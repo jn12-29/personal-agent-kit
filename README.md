@@ -14,7 +14,7 @@ It keeps tool-neutral shared agent instructions, custom skills, and example conf
 - `scripts/install-custom-skills-and-instruction.ps1`: Windows PowerShell version of the install/link script.
 - `scripts/install-config.sh`: copies config files into local tool directories, backing up existing files first.
 - `scripts/install-config.ps1`: Windows PowerShell version of the config install script.
-- `scripts/planning-with-files/`: notes for installing the external `planning-with-files` skill.
+- `scripts/planning-with-files/`: helper scripts for project-level installation of the external `planning-with-files` skill.
 
 ## Install
 
@@ -49,6 +49,26 @@ Existing targets are backed up as `.bak.<timestamp>` before replacement, includi
 Rerunning the install script synchronizes Claude Code skills by removing stale links or junctions in `~/.claude/skills` that point into `<repo>/skills/` when the linked target no longer exists. User-installed skills, ordinary directories, links to other locations, and copy fallback directories whose origin cannot be proven are left in place.
 
 The install scripts do not silently fall back when linking fails: macOS/Linux prints the symlink failure and asks before copying as a fallback; Windows prints the failure reason and asks before using a junction, hard link, or copy fallback. If fallback is declined or fails, the backup is restored.
+
+The `scripts/planning-with-files/` helpers install the external `planning-with-files` skill into the project where you run them. Run the Codex helper from a target project root to install `.codex/skills/planning-with-files`, `.codex/hooks/`, and `.codex/hooks.json`; existing conflicting targets are backed up first. Run the OpenCode helper from a target project root to invoke `npx skills add OthmanAdi/planning-with-files --skill planning-with-files` without `-g`, using the Skills CLI project-level default.
+
+Example: install `planning-with-files` into another project by changing into that project's root first, then running one helper from this kit:
+
+```bash
+cd /path/to/target-project
+bash /path/to/personal-agent-kit/scripts/planning-with-files/codex.sh
+# or, for OpenCode:
+bash /path/to/personal-agent-kit/scripts/planning-with-files/opencode.sh
+```
+
+Windows PowerShell:
+
+```powershell
+Set-Location C:\path\to\target-project
+powershell -ExecutionPolicy Bypass -File C:\path\to\personal-agent-kit\scripts\planning-with-files\codex.ps1
+# or, for OpenCode:
+powershell -ExecutionPolicy Bypass -File C:\path\to\personal-agent-kit\scripts\planning-with-files\opencode.ps1
+```
 
 To overwrite local config files from `config/`, with backups:
 
