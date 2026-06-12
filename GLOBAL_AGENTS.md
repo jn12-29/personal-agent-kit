@@ -74,28 +74,59 @@ For multi-step tasks, state a brief plan:
 
 Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
 
-## 5. Documentation hygiene
+## 5. Execution Boundaries
+
+**Use tools for deterministic work. Use the model for judgment.**
+
+- Use code, shell tools, parsers, schemas, and tests for deterministic transforms, routing, retries, status-code handling, calculations, and validation.
+- Use the model for judgment-heavy work: classification, summarization, drafting, tradeoff analysis, and extracting intent from unstructured text.
+- Before adding code, read relevant exports, immediate callers, and obvious shared utilities.
+- If existing patterns conflict, choose one explicitly, explain why, and flag the other for later cleanup. Do not average contradictory patterns.
+
+## 6. Testing Discipline
+
+**Tests should prove intent, not just touch behavior.**
+
+- Tests should fail when the user intent, bug fix, or contract they protect regresses.
+- For bug fixes, prefer a reproducing test first. If that is impractical, name why and use the closest meaningful verification.
+- Do not treat shallow passing tests as proof of correctness.
+- Name exactly which tests or checks were run, and which relevant tests were skipped.
+
+## 7. Fail Loud
+
+**Skipped work is not done. Unverified work is not verified.**
+
+- Do not claim completion if required work, review, or verification was skipped.
+- Do not say "tests pass" if only a subset ran; name the subset and residual risk.
+- Surface uncertainty, blockers, assumptions, skipped checks, and partial results in the final response.
+- For non-trivial work, separate what was implemented, verified, unverified, and blocked.
+
+## 8. Documentation hygiene
 
 Write the final desired state only — no migration notes, deprecated names, or explanations of removed behavior unless explicitly asked; put historical context in the chat reply instead.
 Before finishing a docs edit, grep the file for obsolete terms and remove them.
 
-## 6. Code organization
+## 9. Code organization
 
 - One file, one responsibility — split when a file mixes concerns or grows unwieldy (~300 lines is a useful trigger, not a hard limit).
 - Keep module-level state explicit: configure it through a setter, not hidden cross-module globals, so behavior stays predictable and testable.
 - After extracting a module, verify it still imports/builds before moving on.
 - Project-specific (e.g. Python CLIs): keep the entry point thin — `parse_args` + `main` in a file nothing else imports.
 
-## 7. Personal Preferences
+## 10. Personal Preferences
 
 - Communicate with me in Chinese. Mixing in English is fine.
 - Use English for all code, comments, and annotations.
 
-## 8. Subagents
+## 11. Subagents
 
-When a loaded skill calls for subagents or independent reviewers, treat that skill trigger as the user's explicit request for that subagent use; do not ask for a separate confirmation.
+Use subagents proactively for non-trivial work that can be split by file set, topic, ownership, or review perspective.
 
-Before any multi-agent delegation, subagent spawning, or independent-review round, read the installed `multi-agent-workflow` skill and follow its context-budget, ownership, prompt, and no-duplicate-work rules.
+- If a loaded skill requires subagents or independent reviewers, treat that as authorization and follow `multi-agent-workflow`; do not ask for separate confirmation.
+- After initial context gathering, actively decide what can be delegated while the main thread keeps the critical path moving.
+- Give each subagent a self-contained scope, authority, expected output, and read-only or edit responsibility.
+- Do not use subagents for trivial, unclear, tightly coupled, or non-decomposable work.
+- Treat subagent results as inputs, not proof; integrate them and verify current files before claiming completion.
 
 ---
 
