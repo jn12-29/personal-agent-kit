@@ -1,4 +1,4 @@
 interface:
   display_name: "Project Material Editor"
-  short_description: "Adapt project materials without stale claims or process leaks"
+  short_description: "Adapt project materials without stale claims, process leaks, or source/export confusion"
   default_prompt: "Use $project-material-editor to review and adapt this project material for the current or proposed project."
