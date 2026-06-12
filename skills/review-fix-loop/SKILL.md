@@ -15,6 +15,8 @@ Use this skill for any task that modifies files: code, documentation, configurat
 
 Authority documents are whatever defines intended behavior for the changed surface: specs, schemas, API contracts, READMEs, design docs, prompts, scripts, and the downstream code or consumers that depend on it.
 
+This skill does not own requirement definition, architecture redesign, durable planning, or broad scope negotiation. It owns the review, fix, re-review, and verification loop after files are changed.
+
 ## The Loop
 
 1. Inspect the relevant current files and authority documents before editing.
@@ -98,7 +100,7 @@ Enforce the minimal true contract: the invariants and dependencies that actually
 
 - Review happens after implementation, not only before.
 - Once independent reviewers are assigned, the main agent must not duplicate their review or broad verification while they run. This preserves the main context for integration and keeps reviewer judgment independent instead of making the main agent re-litigate the same surface. It should wait for reviewer reports for that surface, then inspect only the reported findings, necessary integration points, and minimal final checks.
-- If `multi-agent-workflow` already launched final read-only reviewers that cover this skill's required changed surface and perspectives, count that as the independent review round instead of spawning duplicate reviewers.
+- If an earlier independent read-only review round already covers the required changed surface and perspectives, count that as the independent review round instead of spawning duplicate reviewers.
 - If review finds blockers, fix them and re-review. Do not stop right after the fix.
 - If a review round used independent reviewers, re-run independent read-only review after each blocker fix at the same or stricter tier.
 - If a fix expands the change's blast radius, re-pick the tier from the table and apply the stricter tier's review before continuing.

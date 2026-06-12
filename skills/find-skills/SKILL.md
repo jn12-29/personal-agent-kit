@@ -1,22 +1,27 @@
 ---
 name: find-skills
-description: Helps users discover and install agent skills when they ask questions like "how do I do X", "find a skill for X", "is there a skill that can...", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.
+description: "Use when the user explicitly wants to discover, compare, install, update, or evaluate installable agent skills, or asks whether an installable skill exists for a capability. Do not trigger for ordinary one-off task execution or broad 'can you do X?' questions unless the user is seeking reusable skill installation."
 ---
 
 # Find Skills
 
 This skill helps you discover and install skills from the open agent skills ecosystem.
 
+## Why This Exists
+
+Agents fail in two opposite ways: they miss reusable installable skills when the user wants durable capability, or they interrupt ordinary work with marketplace searches the user did not ask for. This skill keeps discovery focused on explicit skill-installation intent and verifies current quality signals before recommending code or instructions from an external package.
+
 ## When to Use This Skill
 
 Use this skill when the user:
 
-- Asks "how do I do X" where X might be a common task with an existing skill
-- Says "find a skill for X" or "is there a skill for X"
-- Asks "can you do X" where X is a specialized capability
-- Expresses interest in extending agent capabilities
-- Wants to search for tools, templates, or workflows
-- Mentions they wish they had help with a specific domain (design, testing, deployment, etc.)
+- Says "find a skill for X", "install a skill for X", or "is there an installable skill for X"
+- Asks to compare, evaluate, update, or recommend skills
+- Expresses interest in extending agent capabilities with reusable installed behavior
+- Wants to search a skill catalog, marketplace, package, template, or workflow intended for agent installation
+- Describes a recurring specialized capability and asks for reusable help rather than one-off task execution
+
+Do not use this skill for ordinary coding, writing, research, design, or debugging requests when the user is asking the agent to do the work directly. Do not use it when an already installed local capability clearly covers the task.
 
 ## What is the Skills CLI?
 
@@ -55,17 +60,20 @@ npx skills find [query]
 
 For example:
 
-- User asks "how do I make my React app faster?" → `npx skills find react performance`
-- User asks "can you help me with PR reviews?" → `npx skills find pr review`
-- User asks "I need to create a changelog" → `npx skills find changelog`
+- User asks "find an installable skill for React performance" → `npx skills find react performance`
+- User asks "is there a skill for PR review workflows?" → `npx skills find pr review`
+- User asks "install a changelog skill I can reuse" → `npx skills find changelog`
 
 ### Step 4: Verify Quality Before Recommending
 
 **Do not recommend a skill based solely on search results.** Always verify:
 
-1. **Install count** — When current install counts are available, prefer established skills and be cautious with low-install or newly published packages.
-2. **Source reputation** — Official sources (`vercel-labs`, `anthropics`, `microsoft`) are more trustworthy than unknown authors.
-3. **GitHub stars** — Check the source repository. A skill from a repo with <100 stars should be treated with skepticism.
+1. **Current catalog signals** — When install counts, rankings, or update status are available, use them as current signals rather than permanent facts.
+2. **Source identity** — Prefer maintainers with a public track record, clear ownership, and active support; do not treat an unknown source as safe because the name looks relevant.
+3. **Repository activity** — Check README quality, recent commits or releases, issue activity, license, and whether the package still matches the user's environment.
+4. **Compatibility and install path** — Confirm the package name, skill id, install command, and whether installation is global or project-local.
+
+Treat low-signal, newly published, abandoned, or poorly documented packages as risky even when the search result looks relevant.
 
 ### Step 5: Present Options to the User
 
@@ -73,7 +81,7 @@ When you find relevant skills, present them to the user with:
 
 1. The skill name and what it does
 2. Current quality signals such as install count, source, and repository activity when available
-3. The install command they can run
+3. The project-level install command they can run
 4. A link to learn more at skills.sh
 
 Example response:
@@ -91,7 +99,13 @@ Learn more: https://skills.sh/vercel-labs/agent-skills/react-best-practices
 
 ### Step 6: Offer to Install
 
-If the user wants to proceed, you can install the skill for them:
+If the user wants to proceed, install skills at the project level by default:
+
+```bash
+npx skills add <owner/repo@skill> -y
+```
+
+Use user-level installation only when the user explicitly asks for a global or user-level skill:
 
 ```bash
 npx skills add <owner/repo@skill> -g -y

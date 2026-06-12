@@ -11,6 +11,10 @@ description: Use before or during cross-module work where documented contracts a
 
 Before starting multi-agent coding, treat documentation as an executable contract. During coding, treat the implementation as the executable form of that contract. The main agent must fork multiple independent read-only review agents for substantial contract or implementation changes; self-review alone is not enough because the main agent is biased by the current conversation, its own recent edits, and the assumptions it already accepted.
 
+Common failures are treating illustrative examples as hard invariants, treating stale status text as current design, or skipping independent review because the implementation "obviously" matches the intended contract.
+
+**Not for:** localized edits, wording-only cleanup, or refactors only when they have no public contract impact and no documented interface, shared behavior, schema, configuration, runtime state, or downstream consumer must stay aligned.
+
 ## Loop
 
 1. Read the authority documents and identify blocking ambiguities.
@@ -32,6 +36,8 @@ Before starting multi-agent coding, treat documentation as an executable contrac
 - Upstream, downstream, and aggregation pipeline contracts
 - Entry-point scheduling, runtime flags, and error handling
 - Cross-document terminology, examples, and serialization formats
+
+Review reports must classify findings as blockers, non-blocking concerns, or assumptions, and cite file paths with line numbers when files are involved.
 
 ## Documentation As Source Of Truth
 

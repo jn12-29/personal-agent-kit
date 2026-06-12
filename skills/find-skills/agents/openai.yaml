@@ -1,4 +1,4 @@
 interface:
   display_name: "Find Skills"
-  short_description: "Discover and install relevant skills"
-  default_prompt: "Use $find-skills to discover relevant agent skills, verify current quality signals, present options, and install one if the user chooses."
+  short_description: "Find and evaluate relevant skills"
+  default_prompt: "Use $find-skills to discover, compare, update, evaluate, or install relevant agent skills when the user wants reusable skill capability; verify current quality signals before recommending or installing, and default installs to the project unless the user explicitly asks for user-level/global install."

@@ -91,13 +91,13 @@ Before finishing, check:
 Run structural checks first:
 
 ```sh
-python <validator-path> <skill-dir>  # when a validator exists
+python <validator-path> <skill-dir>  # only when the repo provides a validator
 git status --short -- <skill-dir>
 git diff --check -- <skill-dir>
 git diff -- <skill-dir>
 ```
 
-Use the local validation script path for the environment or repository being edited. If no validator exists, do a smoke check for frontmatter, required metadata, and malformed Markdown/YAML.
+Use the local validation script path for the environment or repository being edited. If no validator exists, do a smoke check for frontmatter, required metadata, and malformed Markdown/YAML: confirm `name` matches the folder, `description` is present and trigger-focused, `agents/openai.yaml` remains aligned when present, and fenced code blocks or frontmatter delimiters are not broken.
 
 Then run targeted searches for risks introduced by the edit:
 

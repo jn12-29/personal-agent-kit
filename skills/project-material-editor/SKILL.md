@@ -5,9 +5,17 @@ description: Adapt, revise, and review project materials such as proposals, gran
 
 # Project Material Editor
 
+## Why This Exists
+
+Project material edits fail when agents lightly rewrite an old document and leave stale project names, objectives, metrics, partners, responsibilities, figures, or compliance-sensitive claims. The result can look polished while being false for the current project. This skill forces the agent to verify the current authority, preserve binding template structure, and remove unsupported carryover instead of treating prior material as truth.
+
 ## Overview
 
 Use this skill to turn project materials into a coherent document for the current application, contract, report, planning, delivery, review, or communication purpose, not a lightly edited copy from another project. Treat user instructions, known facts and planning intent about the current or proposed project, target requirements, provided source materials, and user-confirmed sections as the authority, then make the smallest documentation change that makes the material true and fit for purpose.
+
+## Boundary
+
+This skill does not provide final legal, policy, budget, or external compliance approval. It does not invent missing partners, datasets, experiments, metrics, approvals, or delivered capabilities. It does not own complete visual redesign or figure generation, and it does not reopen user-confirmed sections unless the latest instruction does so.
 
 ## Workflow
 

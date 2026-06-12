@@ -1,4 +1,4 @@
 interface:
   display_name: "Diagram Creator"
   short_description: "Create maintainable text-based diagrams"
-  default_prompt: "Use $diagram-creator to create or revise Mermaid, PlantUML, D2, or ASCII diagram source for docs, architecture notes, workflows, data flows, sequences, or models."
+  default_prompt: "Use $diagram-creator to create or revise Mermaid, PlantUML, D2, or ASCII diagram source for docs, architecture notes, workflows, data flows, sequences, models, or lightweight timelines."

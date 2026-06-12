@@ -64,9 +64,17 @@ Review agents must not edit files unless explicitly assigned non-overlapping own
 6. Require each editing agent to report changed sections and any synchronization points for other files.
 7. Treat parallel agent reports as potentially stale because they may be based on earlier workspace snapshots. The main agent must verify against the current files before acting on reported follow-ups.
 8. After merging agent work, run only the targeted searches or checks needed to verify integrated results, such as obsolete terms, old API signatures, old field names, and conflicting examples relevant to the changed contract.
-9. After the main agent merges and normalizes the agent outputs, launch one or more final read-only review agents for cross-document or cross-module consistency. The same reviewers can satisfy `review-fix-loop`'s independent-review tier when their prompts cover the changed surface and required perspectives; do not spawn a second duplicate review round. The review prompt must forbid edits and require file paths with line numbers. If subagent tooling is technically unavailable, run a deliberate fresh-eyes self-review using the same prompt and report that fallback explicitly.
+9. After the main agent merges and normalizes the agent outputs, launch one or more final read-only review agents for cross-document or cross-module consistency. A prior independent read-only review round can satisfy the changed surface when its prompts cover the required perspectives; do not spawn a second duplicate review round. The review prompt must forbid edits and require file paths with line numbers. If subagent tooling is technically unavailable, run a deliberate fresh-eyes self-review using the same prompt and report that fallback explicitly.
 10. The main agent fixes any confirmed findings from the final review, then re-runs targeted searches for the corrected terms or APIs.
 11. The main agent summarizes both changes and verification.
+
+## Quality Gate
+
+- Every delegated task has non-overlapping file or topic ownership, or is explicitly read-only.
+- Read-only reviewers are forbidden to edit and must report blockers, non-blocking concerns, or assumptions with file paths and line numbers when files are involved.
+- The main agent verifies current files before applying agent-reported follow-ups, because parallel reports may be based on older workspace snapshots.
+- If no subagents are used for a triggered cross-file task, the final report states the concrete exception.
+- Final integration includes only targeted searches or checks tied to the changed contract, terminology, public behavior, or examples.
 
 ## Required Agent Prompt Structure
 

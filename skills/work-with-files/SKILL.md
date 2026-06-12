@@ -1,6 +1,6 @@
 ---
 name: work-with-files
-description: "Use when Codex should preserve useful working artifacts as files instead of keeping them only in chat context: intermediate results, generated or one-off scripts, scratch data, research findings, browser/PDF/image observations, decisions, lessons learned, reproducible commands, verification outputs, and resumable task support. Trigger when the user asks to save/persist working material, or when a concrete artifact should outlive chat for review, handoff, reuse, recovery after context loss, auditability, or avoiding repeated fragile tool work. Do not trigger solely because a task is multi-step, long-running, research-heavy, multi-agent, data-processing, document-generation, debugging, migration, or automation. For requirement snapshots, active plans, specs, contracts, or subagent handoffs, use spec-driven-planning for structure and status; this skill owns storage hygiene and supporting artifacts."
+description: "Use when Codex should preserve useful working artifacts as files instead of keeping them only in chat context: intermediate results, generated or one-off scripts, scratch data, research findings, browser/PDF/image observations, decisions, lessons learned, reproducible commands, verification outputs, and resumable task support. Trigger when the user asks to save/persist working material, or when a concrete artifact should outlive chat for review, handoff, reuse, recovery after context loss, auditability, or avoiding repeated fragile tool work. Do not trigger solely because a task is multi-step, long-running, research-heavy, delegated, data-processing, document-generation, debugging, migration, or automation. Requirement snapshots, active plans, specs, contracts, and agent handoffs are planning artifacts; this skill owns storage hygiene and supporting artifacts, not their structure or status."
 ---
 
 # Work With Files
@@ -15,7 +15,7 @@ Do not turn every thought into a file. File-based work is valuable when the arti
 
 Create or update files when the information is one of these:
 
-- Progress notes, acceptance evidence, or resumable state that supports work spanning phases or context resets. If the file defines requirements, active plan state, specs, contracts, or handoffs, use `spec-driven-planning` for structure and status.
+- Progress notes, acceptance evidence, or resumable state that supports work spanning phases or context resets. If the file defines requirements, active plan state, specs, contracts, or handoffs, follow the repo's planning/spec convention for structure and status.
 - Findings from research, browser work, PDFs, images, logs, or code exploration that would be expensive or impossible to rediscover and do not themselves define requirements, plans, specs, contracts, or handoffs.
 - Intermediate results that need comparison, review, transformation, or handoff.
 - Reusable or one-off scripts that make a repeated, fragile, or data-heavy operation reproducible.
@@ -29,7 +29,7 @@ Skip file creation for tiny one-shot answers, throwaway calculations, obvious co
 
 - Inline only: small answer, single command, trivial edit, or no durable value.
 - Working artifact: useful for this task but not final user-facing output, such as notes, scratch data, one-off scripts, findings, non-planning progress evidence, or intermediate exports. Default to not tracking it in git.
-- Planning artifact: requirement snapshot, active plan pointer, plan, spec, contract, or subagent handoff that defines what work means. Use `spec-driven-planning` for structure and status, then apply this skill only for storage hygiene and any supporting files.
+- Planning artifact: requirement snapshot, active plan pointer, plan, spec, contract, or agent handoff that defines what work means. Follow the repo's planning/spec convention for structure and status; this skill applies only to storage hygiene and supporting files.
 - Project artifact: user-requested or task-required final deliverable, such as code, docs, tests, assets, specs, or final generated outputs.
 - Reusable tool: script or template likely to be used again; give it a clear name, inputs, outputs, and usage notes.
 
@@ -57,7 +57,7 @@ Follow existing repo conventions first. Do not scatter working artifacts across 
 If no convention exists:
 
 - Put task-local working artifacts under a task-scoped work directory, such as `.work/<task-slug>/`. Use `YYYY-MM-DD-short-slug` for `<task-slug>` unless the repo or tool provides a stable id.
-- Put durable planning state under the planning convention chosen by `spec-driven-planning`, such as `.planning/<plan-id>/`, when planning state is actually needed.
+- Put durable planning state under the repo's active planning/spec convention, such as `.planning/<plan-id>/`, when planning state is actually needed.
 - Put reusable scripts in the closest appropriate `scripts/` directory, or in the task work directory if they are one-off.
 - Put final deliverables where the user or repo convention expects them, not inside a hidden work directory.
 
@@ -97,9 +97,9 @@ Use descriptive, stable names: `findings.md`, `run-log.md`, `verify-results.md`,
 - Remove or clearly mark scratch artifacts that should not be treated as deliverables.
 - When a file becomes a project artifact, review it like any other modified file.
 
-## Interaction With Other Skills
+## Boundary With Planning And Review Work
 
-- Use `spec-driven-planning` when persisted files need requirement snapshots, active planning state, plans, specs, or agent handoff documents.
-- Do not duplicate `spec-driven-planning`'s templates or active-plan rules here; this skill decides what should persist and where working artifacts belong.
-- Use `multi-agent-workflow` when file-based artifacts will be handed to subagents or reviewed from multiple perspectives.
-- Use `review-fix-loop` after modifying files to review, fix, re-review, and verify the changed surface.
+- This skill does not define templates, active status, or authority rules for requirements, plans, specs, contracts, or handoffs; it uses the repo's existing planning/spec convention when those artifacts are needed.
+- This skill decides what should persist, where supporting artifacts belong, how they should be named, and how to prevent scratch files from being mistaken for deliverables.
+- When file-based artifacts are handed to agents or reviewers, keep paths, names, scope, staleness, and authority clear.
+- After modifying persisted files, review and verify the changed surface according to the project's normal quality process.

@@ -30,7 +30,7 @@ Not allowed by default: global page titles, deck-style subtitles, prose summarie
    - Structured explanatory figures such as architecture, workflow, process, API, file layout, data-flow, algorithm, or concept diagrams: draw with SVG/HTML/CSS and controlled layout when precise visual control is needed.
    - Simple Mermaid, PlantUML, or D2 diagrams can be rendered into PPT/DOCX-ready SVG or PNG when the generated layout remains readable at the final insertion size. If the rendered output becomes crowded, tangled, or visually generic, redraw with controlled SVG/HTML/CSS instead of accepting the auto-layout.
    - Product UI state: use a real screenshot only when the figure needs to show actual UI; see the reference checklist for screenshot QA.
-   - Abstract concept figures: use raster image generation only if product accuracy is not implied. For non-figure art, use the relevant image or presentation workflow instead.
+   - Abstract concept figures: use raster image generation only if product accuracy is not implied. Non-figure art and full presentation design are outside this figure-asset workflow.
 
 3. Design for document scale.
    - For standalone figure assets intended for Word, PDF, or slides, default to a 16:9 canvas at 1920x1080 unless the user, target placeholder, or document template requires another size. Treat the canvas as the figure itself, not the surrounding document or slide layout: do not reserve empty outer space for titles, logos, captions, or nearby prose. Keep only the internal padding needed so labels, arrows, and blocks do not touch the canvas edge or get cropped.

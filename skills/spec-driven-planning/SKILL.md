@@ -1,6 +1,6 @@
 ---
 name: spec-driven-planning
-description: Use when Codex needs to turn a task into a clear requirement/goal snapshot, active planning state, implementation plan, technical spec, interface contract, documentation contract, or multi-agent handoff document before coding or editing. Trigger for ambiguous, multi-step, cross-file, cross-module, multi-agent, contract/schema/config/API/public behavior, prompt, script, or documentation-interface work where the current target, goal validity, non-goals, ownership, inputs, outputs, acceptance criteria, and verification must be explicit.
+description: Use when Codex needs the smallest useful requirement/goal snapshot, active planning state, implementation plan, technical spec, interface contract, documentation contract, or agent handoff document before coding or editing. Trigger for ambiguous, multi-step, cross-file, cross-module, delegated, contract/schema/config/API/public behavior, prompt, script, or documentation-interface work where the current target, goal validity, non-goals, ownership, inputs, outputs, acceptance criteria, and verification must be explicit. Do not use durable planning for trivial single-file typo or wording cleanup with no contract impact.
 ---
 
 # Spec Driven Planning
@@ -31,7 +31,7 @@ When uncertain, write the smallest useful plan/spec before implementation. Do no
 6. Identify interfaces: files, modules, data shapes, configuration fields, commands, paths, prompts, public outputs, and downstream consumers.
 7. Identify document interfaces: which docs are authority, which docs consume or summarize them, who owns each doc, and what each doc must contain or avoid.
 8. Write the smallest plan/spec that makes the work executable without hidden context.
-9. Convert decomposable work into self-contained handoff blocks before spawning agents authorized by `multi-agent-workflow` or `review-fix-loop`.
+9. Convert decomposable work into self-contained handoff blocks before splitting work across agents, files, modules, or review perspectives.
 10. Update durable progress state at phase boundaries or after meaningful discoveries, verification results, blockers, and goal changes.
 11. If implementation reveals a contract gap or goal drift, pause broad coding, update the requirement snapshot or plan/spec, then resume.
 
@@ -77,9 +77,10 @@ Treat active plan/spec docs as current-state source-of-truth documents, not chan
 - Documentation and implementation stay aligned; when they conflict, use the project contract rules to decide whether to update docs or implementation.
 - The final plan/spec names what must not change as clearly as what must change.
 
-## Interaction With Other Skills
+## Boundary With Adjacent Work
 
-- Use `work-with-files` when the main question is whether intermediate results, scripts, notes, logs, or findings should be preserved as files. This skill owns the plan/spec structure once the artifact defines requirements, active planning state, contracts, or handoffs.
-- Use `multi-agent-workflow` after this skill when work should be split across subagents.
-- Use `contract-hardening` when the spec affects shared contracts, schemas, runtime state, serialization, or public behavior.
-- Use `review-fix-loop` after modifying files to review, fix, re-review, and verify the changed surface.
+- This skill owns requirement, plan, spec, contract, and handoff structure once an artifact defines what work means.
+- Storage-only decisions for scratch notes, raw extracts, scripts, logs, and bulky intermediate outputs are outside this planning contract except when they affect the requirement, plan, spec, or handoff.
+- Delegation orchestration, concurrency, and reviewer integration are outside the plan/spec artifact; this skill only requires self-contained handoff blocks with clear inputs, outputs, authority, and done conditions.
+- Shared contract plans must name the source-of-truth invariants and downstream consumers so implementation can be verified against them.
+- After file modifications, run an explicit review, fix, re-review, and verification loop for the changed surface.
