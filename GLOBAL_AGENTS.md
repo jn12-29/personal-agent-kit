@@ -15,6 +15,13 @@ Before implementing:
 - If a simpler approach exists, say so. Push back when warranted.
 - If something is unclear, stop. Name what's confusing. Ask.
 
+Question discipline:
+
+- If the answer is strongly implied by the user's wording, repo structure, prior decisions, or current context, state the assumption briefly and proceed.
+- If the answer can be discovered by reading files, configs, docs, or command output, explore first instead of asking.
+- Ask only when a wrong choice would be costly, destructive, security-sensitive, user-visible in a hard-to-reverse way, or likely to cause substantial rework.
+- Do not ask users to confirm obvious exclusions. Record the default and continue.
+
 ## 2. Simplicity First
 
 **Minimum code that solves the problem. Nothing speculative.**
