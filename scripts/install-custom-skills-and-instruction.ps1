@@ -215,7 +215,57 @@ function Install-LinkOrCopy {
     }
 }
 
+function Ensure-RealDirectory {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path
+    )
+
+    $parent = Split-Path -Parent $Path
+    if ($parent) {
+        New-Item -ItemType Directory -Path $parent -Force | Out-Null
+    }
+
+    if (Test-Path -LiteralPath $Path) {
+        $item = Get-Item -LiteralPath $Path -Force
+        if ($item.PSIsContainer -and -not $item.LinkType) {
+            return
+        }
+    }
+
+    $backupPath = $null
+    Backup-Path $Path ([ref]$backupPath)
+    New-Item -ItemType Directory -Path $Path -Force | Out-Null
+}
+
+function Install-ClaudeSkills {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$SourceDirectory,
+        [Parameter(Mandatory = $true)]
+        [string]$DestinationDirectory
+    )
+
+    if (-not (Test-Path -LiteralPath $SourceDirectory -PathType Container)) {
+        Write-Output "Missing skills directory, skipped: $SourceDirectory"
+        return
+    }
+
+    Ensure-RealDirectory $DestinationDirectory
+
+    $skills = Get-ChildItem -LiteralPath $SourceDirectory -Directory
+    if (-not $skills) {
+        Write-Output "No skill directories found: $SourceDirectory"
+        return
+    }
+
+    foreach ($skill in $skills) {
+        Install-LinkOrCopy $skill.FullName (Join-Path $DestinationDirectory $skill.Name)
+    }
+}
+
 Install-LinkOrCopy (Join-Path $repo "skills") (Join-Path $HOME ".agents/skills")
+Install-ClaudeSkills (Join-Path $repo "skills") (Join-Path $HOME ".claude/skills")
 Install-LinkOrCopy (Join-Path $repo "AGENTS.md") (Join-Path $HOME ".codex/AGENTS.md")
 Install-LinkOrCopy (Join-Path $repo "AGENTS.md") (Join-Path $HOME ".config/opencode/AGENTS.md")
 Install-LinkOrCopy (Join-Path $repo "AGENTS.md") (Join-Path $HOME ".claude/CLAUDE.md")

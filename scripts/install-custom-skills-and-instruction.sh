@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 把 personal-agent-kit 的 skills 和 AGENTS.md symlink 到 Codex / OpenCode 的加载位置。
+# Link personal-agent-kit skills and AGENTS.md into Codex, OpenCode, and Claude load paths.
 # Config is handled separately by scripts/install-config.sh.
 set -euo pipefail
 
@@ -60,10 +60,46 @@ link() {
   return 1
 }
 
-# skills:唯一真身 = $REPO/skills（Codex 与 OpenCode 都从 ~/.agents/skills 读）
-link "$REPO/skills" "$HOME/.agents/skills"
+ensure_real_directory() {
+  local dst="$1"
+  mkdir -p "$(dirname "$dst")"
 
-# AGENTS.md:两个工具全局路径不同，各链一份（各读一次，不重复）
+  if [ -d "$dst" ] && [ ! -L "$dst" ]; then
+    return
+  fi
+
+  if [ -e "$dst" ] || [ -L "$dst" ]; then
+    local bak="$dst.bak.$(date +%Y%m%d%H%M%S)"
+    mv "$dst" "$bak"; echo "↪ 已备份: $dst → $bak"
+  fi
+
+  mkdir -p "$dst"
+}
+
+install_claude_skills() {
+  local src_dir="$1" dst_dir="$2"
+  [ -d "$src_dir" ] || { echo "⚠ skills directory missing, skipped: $src_dir"; return; }
+
+  ensure_real_directory "$dst_dir"
+
+  local skill skill_name found=0
+  for skill in "$src_dir"/*; do
+    [ -d "$skill" ] || continue
+    found=1
+    skill_name="$(basename "$skill")"
+    link "$skill" "$dst_dir/$skill_name"
+  done
+
+  if [ "$found" -eq 0 ]; then
+    echo "No skill directories found: $src_dir"
+  fi
+}
+
+# Skills source is $REPO/skills; Codex/OpenCode use ~/.agents/skills, Claude gets per-skill links.
+link "$REPO/skills" "$HOME/.agents/skills"
+install_claude_skills "$REPO/skills" "$HOME/.claude/skills"
+
+# AGENTS.md / CLAUDE.md: each tool has its own global instruction path.
 link "$REPO/AGENTS.md" "$HOME/.codex/AGENTS.md"
 link "$REPO/AGENTS.md" "$HOME/.config/opencode/AGENTS.md"
 link "$REPO/AGENTS.md" "$HOME/.claude/CLAUDE.md"
