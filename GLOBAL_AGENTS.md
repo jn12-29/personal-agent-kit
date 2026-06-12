@@ -118,15 +118,13 @@ Before finishing a docs edit, grep the file for obsolete terms and remove them.
 - Communicate with me in Chinese. Mixing in English is fine.
 - Use English for all code, comments, and annotations.
 
-## 11. Subagents
+## 11. Multi-agent
 
-Use subagents proactively for non-trivial work that can be split by file set, topic, ownership, or review perspective.
+Use Multi-agent proactively for non-trivial work that can be split by file set, topic, ownership, or review perspective.
 
-- If a loaded skill requires subagents or independent reviewers, treat that as authorization and follow `multi-agent-workflow`; do not ask for separate confirmation.
-- After initial context gathering, actively decide what can be delegated while the main thread keeps the critical path moving.
-- Give each subagent a self-contained scope, authority, expected output, and read-only or edit responsibility.
-- Do not use subagents for trivial, unclear, tightly coupled, or non-decomposable work.
-- Treat subagent results as inputs, not proof; integrate them and verify current files before claiming completion.
+- If a loaded skill, active instruction file, or the current task requirements require Multi-agent or independent reviewers, treat that requirement as the user's explicit request and authorization to use available subagent tooling; do not ask for separate confirmation.
+- For trivial, unclear, tightly coupled, or non-decomposable work, keep the work in the main thread and briefly state the exception when the task otherwise looks cross-file.
+- When using subagents, rely on the dedicated Multi-agent workflow instructions for delegation boundaries, prompt structure, integration, and verification.
 
 ---
 
