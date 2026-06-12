@@ -1,6 +1,6 @@
 ---
 name: improve-skills
-description: "Use when improving, rewriting, or hardening an existing Codex skill or related skill set from user feedback, observed agent mistakes, review findings, unclear triggers, weak rationale, stale examples, missing validation/evals, trigger overlap, cross-skill coupling, or poor multi-agent behavior. Guides why-first, zero-coupled, eval-driven revision: tighten triggers, make each skill self-contained, keep bodies lean, update metadata, and validate changed behavior."
+description: "Use when improving, rewriting, or hardening an existing installed skill or related skill set from user feedback, observed agent mistakes, review findings, unclear triggers, weak rationale, stale examples, missing validation/evals, trigger overlap, cross-skill coupling, or poor multi-agent behavior. Guides why-first, zero-coupled, eval-driven revision: tighten triggers, make each skill self-contained, keep bodies lean, update metadata, and validate changed behavior."
 ---
 
 # Improve Skills

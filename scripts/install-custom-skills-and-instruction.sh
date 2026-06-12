@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Link personal-agent-kit skills and GLOBAL_AGENTS.md into Codex, OpenCode, and Claude load paths.
+# Link personal-agent-kit skills and GLOBAL_AGENTS.md into Codex, OpenCode, and Claude Code load paths.
 # Config is handled separately by scripts/install-config.sh.
 set -euo pipefail
 
@@ -93,7 +93,7 @@ cleanup_stale_claude_skills() {
       "$src_dir"/*)
         if [ ! -e "$target" ]; then
           rm "$entry"
-          echo "Removed stale Claude skill link: $entry → $target"
+          echo "Removed stale Claude Code skill link: $entry → $target"
         fi
         ;;
     esac
@@ -120,7 +120,7 @@ install_claude_skills() {
   fi
 }
 
-# Skills source is $REPO/skills; Codex/OpenCode use ~/.agents/skills, Claude gets per-skill links.
+# Skills source is $REPO/skills; Codex/OpenCode use ~/.agents/skills, Claude Code gets per-skill links.
 link "$REPO/skills" "$HOME/.agents/skills"
 install_claude_skills "$REPO/skills" "$HOME/.claude/skills" "$HOME/.claude/skills-backups"
 

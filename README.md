@@ -1,15 +1,15 @@
 # personal-agent-kit
 
-Personal agent setup kit for Codex, OpenCode, and Claude.
+Personal multi-agent setup kit for agent tools, including but not limited to Codex, OpenCode, and Claude Code.
 
-It keeps shared agent instructions, custom skills, and example configs in one repo, with helper scripts to install them into each tool's expected location.
+It keeps tool-neutral shared agent instructions, custom skills, and example configs in one repo, with helper scripts to install them into the tool paths this repo currently supports.
 
 ## Contents
 
 - `AGENTS.md`: project-specific instructions for maintaining this repository.
-- `GLOBAL_AGENTS.md`: shared global agent behavior guidelines installed into agent tool load paths.
-- `skills/`: custom skills for reviews, contract checks, multi-agent work, and skill discovery.
-- `config/`: example Codex and OpenCode config files.
+- `GLOBAL_AGENTS.md`: shared global agent behavior guidelines installed by current scripts into Codex, OpenCode, and Claude Code instruction load paths.
+- `skills/`: custom skills for reviews, contract checks, multi-agent work, and skill discovery across compatible agent tools.
+- `config/`: example Codex and OpenCode config files; Claude Code currently uses shared instructions and skills from this repo rather than a separate config example.
 - `scripts/install-custom-skills-and-instruction.sh`: links instructions and skills into local tool directories.
 - `scripts/install-custom-skills-and-instruction.ps1`: Windows PowerShell version of the install/link script.
 - `scripts/install-config.sh`: copies config files into local tool directories, backing up existing files first.
@@ -44,9 +44,9 @@ Here `<repo>` is the cloned repo directory that contains the script being run.
 - `~/.config/opencode/AGENTS.md` -> `<repo>/GLOBAL_AGENTS.md`
 - `~/.claude/CLAUDE.md` -> `<repo>/GLOBAL_AGENTS.md`
 
-Existing targets are backed up as `.bak.<timestamp>` before replacement, including `~/.agents/skills`. For Claude skills, `~/.claude/skills` is kept as a real directory; if it already exists as a file or whole-directory link, it is backed up before per-skill links are installed. Per-skill Claude conflicts are backed up outside the scanned skills directory, under `~/.claude/skills-backups/<skill-name>.bak.<timestamp>`.
+Existing targets are backed up as `.bak.<timestamp>` before replacement, including `~/.agents/skills`. For Claude Code skills, `~/.claude/skills` is kept as a real directory; if it already exists as a file or whole-directory link, it is backed up before per-skill links are installed. Per-skill Claude Code conflicts are backed up outside the scanned skills directory, under `~/.claude/skills-backups/<skill-name>.bak.<timestamp>`.
 
-Rerunning the install script synchronizes Claude skills by removing stale links or junctions in `~/.claude/skills` that point into `<repo>/skills/` when the linked target no longer exists. User-installed skills, ordinary directories, links to other locations, and copy fallback directories whose origin cannot be proven are left in place.
+Rerunning the install script synchronizes Claude Code skills by removing stale links or junctions in `~/.claude/skills` that point into `<repo>/skills/` when the linked target no longer exists. User-installed skills, ordinary directories, links to other locations, and copy fallback directories whose origin cannot be proven are left in place.
 
 The install scripts do not silently fall back when linking fails: macOS/Linux prints the symlink failure and asks before copying as a fallback; Windows prints the failure reason and asks before using a junction, hard link, or copy fallback. If fallback is declined or fails, the backup is restored.
 
@@ -61,6 +61,8 @@ Windows PowerShell:
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\install-config.ps1
 ```
+
+The OpenCode example uses `codex` as a provider alias in `config/opencode.json`; that alias is a config value, not a repository-wide Codex-only scope.
 
 If you use the included model provider examples, add this to `~/.bashrc` or `~/.zshrc`:
 

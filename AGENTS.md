@@ -2,6 +2,13 @@
 
 Project-specific instructions for maintaining this repository.
 
+## Repository Contract
+
+- This repository is a multi-agent, multi-tool setup kit for agent tools, including but not limited to Codex, OpenCode, and Claude Code.
+- Shared documentation and skills use tool-neutral terms by default: `agent`, `assistant`, `skill`, and `instruction file`.
+- Use tool names only for actual install paths, config files, commands, provider names, or tool-specific integrations.
+- When changing supported tools, installation destinations, or instruction filenames, update `README.md`, `GLOBAL_AGENTS.md`, `AGENTS.md`, Bash/PowerShell install scripts, and affected skill metadata together.
+
 ## Repository Roles
 
 - `GLOBAL_AGENTS.md` is the source file for shared global agent instructions.

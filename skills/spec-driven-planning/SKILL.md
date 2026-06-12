@@ -1,6 +1,6 @@
 ---
 name: spec-driven-planning
-description: Use when Codex needs the smallest useful requirement/goal snapshot, active planning state, implementation plan, technical spec, interface contract, documentation contract, or agent handoff document before coding or editing. Trigger for ambiguous, multi-step, cross-file, cross-module, delegated, contract/schema/config/API/public behavior, prompt, script, or documentation-interface work where the current target, goal validity, non-goals, ownership, inputs, outputs, acceptance criteria, and verification must be explicit. Do not use durable planning for trivial single-file typo or wording cleanup with no contract impact.
+description: Use when an agent needs the smallest useful requirement/goal snapshot, active planning state, implementation plan, technical spec, interface contract, documentation contract, or agent handoff document before coding or editing. Trigger for ambiguous, multi-step, cross-file, cross-module, delegated, contract/schema/config/API/public behavior, prompt, script, or documentation-interface work where the current target, goal validity, non-goals, ownership, inputs, outputs, acceptance criteria, and verification must be explicit. Do not use durable planning for trivial single-file typo or wording cleanup with no contract impact.
 ---
 
 # Spec Driven Planning

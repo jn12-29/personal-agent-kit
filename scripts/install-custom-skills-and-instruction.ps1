@@ -296,7 +296,7 @@ function Remove-StaleClaudeSkills {
         }
 
         Remove-InstalledPath $item.FullName
-        Write-Output "Removed stale Claude skill link: $($item.FullName) -> $target"
+        Write-Output "Removed stale Claude Code skill link: $($item.FullName) -> $target"
     }
 }
 
@@ -327,8 +327,11 @@ function Install-ClaudeSkills {
     }
 }
 
+# Skills source is $repo/skills; Codex/OpenCode use ~/.agents/skills, Claude Code gets per-skill links.
 Install-LinkOrCopy (Join-Path $repo "skills") (Join-Path $HOME ".agents/skills")
 Install-ClaudeSkills (Join-Path $repo "skills") (Join-Path $HOME ".claude/skills")
+
+# GLOBAL_AGENTS.md is installed into each tool's global instruction path.
 Install-LinkOrCopy (Join-Path $repo "GLOBAL_AGENTS.md") (Join-Path $HOME ".codex/AGENTS.md")
 Install-LinkOrCopy (Join-Path $repo "GLOBAL_AGENTS.md") (Join-Path $HOME ".config/opencode/AGENTS.md")
 Install-LinkOrCopy (Join-Path $repo "GLOBAL_AGENTS.md") (Join-Path $HOME ".claude/CLAUDE.md")
