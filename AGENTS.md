@@ -1,118 +1,24 @@
 # AGENTS.md
 
-Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
+Project-specific instructions for maintaining this repository.
 
-**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+## Repository Roles
 
-## 1. Think Before Coding
+- `GLOBAL_AGENTS.md` is the source file for shared global agent instructions.
+- `AGENTS.md` is only for this repository's project-level operating guidance.
+- `skills/` contains installable custom skills. Each skill directory owns its own `SKILL.md` and any optional `agents/`, `references/`, `scripts/`, or assets.
+- `config/` contains example Codex and OpenCode config files.
+- `scripts/` owns install and link behavior.
 
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
+## Maintenance Rules
 
-Before implementing:
+- Keep `README.md`, `GLOBAL_AGENTS.md`, `AGENTS.md`, and install scripts in sync when instruction filenames or install destinations change.
+- When changing install behavior, update both Bash and PowerShell scripts unless the change is explicitly platform-specific.
+- Do not put general agent behavior guidelines in this file. Put shared global guidance in `GLOBAL_AGENTS.md`.
+- Keep this file lean and project-specific; stable repo conventions belong here, human onboarding belongs in `README.md`.
 
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them — don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
+## Verification
 
-## 2. Simplicity First
-
-**Minimum code that solves the problem. Nothing speculative.**
-
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No "flexibility" or "configurability" that wasn't requested.
-- No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
-
-Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
-
-## 3. Surgical Changes
-
-**Touch only what you must. Clean up only your own mess.**
-
-When editing existing code:
-
-- Don't "improve" adjacent code, comments, or formatting.
-- Don't refactor things that aren't broken.
-- Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it — don't delete it.
-
-When your changes create orphans:
-
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
-
-The test: every changed line should trace directly to the user's request.
-
-The same rule applies to fixes made during review: keep them surgical, do not use review findings as an excuse for opportunistic refactoring.
-
-## 4. Goal-Driven Execution
-
-**Define success criteria. Loop until verified.**
-
-Transform tasks into verifiable goals:
-
-- "Add validation" → "Write tests for invalid inputs, then make them pass"
-- "Fix the bug" → "Write a test that reproduces it, then make it pass"
-- "Refactor X" → "Ensure tests pass before and after"
-
-For multi-step tasks, state a brief plan:
-
-```
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
-```
-
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
-
-## 5. Documentation hygiene
-
-Treat docs as the source of truth for the _current_ design, not a changelog.
-Write the final desired state only — no migration notes, deprecated names, or explanations of removed behavior unless explicitly asked; put historical context in the chat reply instead.
-Before finishing a docs edit, grep the file for obsolete terms and remove them.
-
-## 6. Code organization
-
-- One file, one responsibility — split when a file mixes concerns or grows unwieldy (~300 lines is a useful trigger, not a hard limit).
-- Keep module-level state explicit: configure it through a setter, not hidden cross-module globals, so behavior stays predictable and testable.
-- After extracting a module, verify it still imports/builds before moving on.
-- Project-specific (e.g. Python CLIs): keep the entry point thin — `parse_args` + `main` in a file nothing else imports.
-
-## 7. Writing and maintaining AGENTS.md
-
-A project's (repo-level) AGENTS.md holds operational context and judgment an agent can't get from that repo's code, toolchain, or README.
-Route each fact by scope and volatility — most "helpful detail" belongs elsewhere:
-
-- Local to one function or file → a comment or docstring at that spot, never here; it rots fast and must update in the same diff as the code.
-- Enforced by a tool (formatting, lint, types) → the tool's config, not restated.
-- Already covered by this user-level AGENTS.md → don't repeat it.
-- What the project is / human onboarding → README.
-- In-flight or volatile → the issue tracker.
-- Stable, cross-cutting, agent-facing → the project's AGENTS.md: build/test commands, where things live, conventions the agent keeps getting wrong, ask-first / never actions.
-
-When something belongs there:
-
-- Be concrete — exact commands and a clear "done" check, not vague directives.
-- State the why only when it changes behavior.
-- Grow it from real mistakes; delete rules once the friction is gone.
-- Treat it as code: update it in the same change that alters a convention.
-- Keep it lean — a long file dilutes the weight of every line.
-- Monorepo: agents load the nearest file up the tree — keep the root thin, push specifics into per-package files.
-
-## 8. Personal Preferences
-
-- Communicate with me in Chinese. Mixing in English is fine.
-- Use English for all code, comments, and annotations.
-- Keep `README.md`, `AGENTS.md`, and `*.sh` in sync when a change makes them stale, or when asked.
-
-## 9. Subagents
-
-When a loaded skill calls for subagents or independent reviewers, treat that skill trigger as the user's explicit request for that subagent use; do not ask for a separate confirmation.
-
-Before any multi-agent delegation, subagent spawning, or independent-review round, read the installed `multi-agent-workflow` skill and follow its context-budget, ownership, prompt, and no-duplicate-work rules.
-
----
-
-**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+- For Bash script changes, run `bash -n <script>`.
+- For install-path or instruction-file changes, run `rg -n "AGENTS\\.md|GLOBAL_AGENTS\\.md|CLAUDE\\.md" README.md scripts AGENTS.md GLOBAL_AGENTS.md` and confirm the source and destination paths agree.
+- Before finishing documentation changes, search the changed files for stale filenames or obsolete install mappings.

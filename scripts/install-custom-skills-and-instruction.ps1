@@ -266,9 +266,9 @@ function Install-ClaudeSkills {
 
 Install-LinkOrCopy (Join-Path $repo "skills") (Join-Path $HOME ".agents/skills")
 Install-ClaudeSkills (Join-Path $repo "skills") (Join-Path $HOME ".claude/skills")
-Install-LinkOrCopy (Join-Path $repo "AGENTS.md") (Join-Path $HOME ".codex/AGENTS.md")
-Install-LinkOrCopy (Join-Path $repo "AGENTS.md") (Join-Path $HOME ".config/opencode/AGENTS.md")
-Install-LinkOrCopy (Join-Path $repo "AGENTS.md") (Join-Path $HOME ".claude/CLAUDE.md")
+Install-LinkOrCopy (Join-Path $repo "GLOBAL_AGENTS.md") (Join-Path $HOME ".codex/AGENTS.md")
+Install-LinkOrCopy (Join-Path $repo "GLOBAL_AGENTS.md") (Join-Path $HOME ".config/opencode/AGENTS.md")
+Install-LinkOrCopy (Join-Path $repo "GLOBAL_AGENTS.md") (Join-Path $HOME ".claude/CLAUDE.md")
 
 Write-Output ""
 Write-Output "Done. To install config files with backup:"

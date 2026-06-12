@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Link personal-agent-kit skills and AGENTS.md into Codex, OpenCode, and Claude load paths.
+# Link personal-agent-kit skills and GLOBAL_AGENTS.md into Codex, OpenCode, and Claude load paths.
 # Config is handled separately by scripts/install-config.sh.
 set -euo pipefail
 
@@ -99,10 +99,10 @@ install_claude_skills() {
 link "$REPO/skills" "$HOME/.agents/skills"
 install_claude_skills "$REPO/skills" "$HOME/.claude/skills"
 
-# AGENTS.md / CLAUDE.md: each tool has its own global instruction path.
-link "$REPO/AGENTS.md" "$HOME/.codex/AGENTS.md"
-link "$REPO/AGENTS.md" "$HOME/.config/opencode/AGENTS.md"
-link "$REPO/AGENTS.md" "$HOME/.claude/CLAUDE.md"
+# GLOBAL_AGENTS.md is installed into each tool's global instruction path.
+link "$REPO/GLOBAL_AGENTS.md" "$HOME/.codex/AGENTS.md"
+link "$REPO/GLOBAL_AGENTS.md" "$HOME/.config/opencode/AGENTS.md"
+link "$REPO/GLOBAL_AGENTS.md" "$HOME/.claude/CLAUDE.md"
 
 echo
 echo "完成。config 可用脚本覆盖安装（会先备份已有文件）："
