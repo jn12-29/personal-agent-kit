@@ -22,7 +22,8 @@ function Backup-Path {
         [Parameter(Mandatory = $true)]
         [string]$Path,
         [Parameter(Mandatory = $true)]
-        [ref]$BackupPath
+        [ref]$BackupPath,
+        [string]$BackupDirectory
     )
 
     $BackupPath.Value = $null
@@ -31,7 +32,13 @@ function Backup-Path {
         return
     }
 
-    $backup = "$Path.bak.$(Get-Date -Format 'yyyyMMddHHmmss')"
+    if ($BackupDirectory) {
+        New-Item -ItemType Directory -Path $BackupDirectory -Force | Out-Null
+        $backupName = "$(Split-Path -Leaf $Path).bak.$(Get-Date -Format 'yyyyMMddHHmmss')"
+        $backup = Join-Path $BackupDirectory $backupName
+    } else {
+        $backup = "$Path.bak.$(Get-Date -Format 'yyyyMMddHHmmss')"
+    }
     Move-Item -LiteralPath $Path -Destination $backup
     $BackupPath.Value = $backup
     Write-Output "Backed up: $Path -> $backup"
@@ -136,7 +143,8 @@ function Install-LinkOrCopy {
         [Parameter(Mandatory = $true)]
         [string]$Source,
         [Parameter(Mandatory = $true)]
-        [string]$Destination
+        [string]$Destination,
+        [string]$BackupDirectory
     )
 
     if (-not (Test-Path -LiteralPath $Source)) {
@@ -155,7 +163,7 @@ function Install-LinkOrCopy {
     }
 
     $backupPath = $null
-    Backup-Path $Destination ([ref]$backupPath)
+    Backup-Path $Destination ([ref]$backupPath) $BackupDirectory
 
     $sourceItem = Get-Item -LiteralPath $Source -Force
     $sourceIsDirectory = $sourceItem.PSIsContainer
@@ -260,7 +268,7 @@ function Install-ClaudeSkills {
     }
 
     foreach ($skill in $skills) {
-        Install-LinkOrCopy $skill.FullName (Join-Path $DestinationDirectory $skill.Name)
+        Install-LinkOrCopy $skill.FullName (Join-Path $DestinationDirectory $skill.Name) (Join-Path $HOME ".claude/skills-backups")
     }
 }
 

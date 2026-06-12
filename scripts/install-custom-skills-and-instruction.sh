@@ -6,16 +6,22 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="${AGENT_KIT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 
-# link <真身> <链接位置>:已正确链接→跳过;已有内容→备份后再链;绝不删除
+# link <真身> <链接位置> [备份目录]:已正确链接→跳过;已有内容→备份后再链;绝不删除
 link() {
-  local src="$1" dst="$2"
+  local src="$1" dst="$2" backup_dir="${3:-}"
   [ -e "$src" ] || { echo "⚠ 真身不存在,跳过: $src"; return; }
   mkdir -p "$(dirname "$dst")"
   if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then
     echo "✓ 已链接: $dst"; return
   fi
   if [ -e "$dst" ] || [ -L "$dst" ]; then
-    local bak="$dst.bak.$(date +%Y%m%d%H%M%S)"
+    local bak
+    if [ -n "$backup_dir" ]; then
+      mkdir -p "$backup_dir"
+      bak="$backup_dir/$(basename "$dst").bak.$(date +%Y%m%d%H%M%S)"
+    else
+      bak="$dst.bak.$(date +%Y%m%d%H%M%S)"
+    fi
     mv "$dst" "$bak"; echo "↪ 已备份: $dst → $bak"
   fi
   local err
@@ -77,7 +83,7 @@ ensure_real_directory() {
 }
 
 install_claude_skills() {
-  local src_dir="$1" dst_dir="$2"
+  local src_dir="$1" dst_dir="$2" backup_dir="$3"
   [ -d "$src_dir" ] || { echo "⚠ skills directory missing, skipped: $src_dir"; return; }
 
   ensure_real_directory "$dst_dir"
@@ -87,7 +93,7 @@ install_claude_skills() {
     [ -d "$skill" ] || continue
     found=1
     skill_name="$(basename "$skill")"
-    link "$skill" "$dst_dir/$skill_name"
+    link "$skill" "$dst_dir/$skill_name" "$backup_dir"
   done
 
   if [ "$found" -eq 0 ]; then
@@ -97,7 +103,7 @@ install_claude_skills() {
 
 # Skills source is $REPO/skills; Codex/OpenCode use ~/.agents/skills, Claude gets per-skill links.
 link "$REPO/skills" "$HOME/.agents/skills"
-install_claude_skills "$REPO/skills" "$HOME/.claude/skills"
+install_claude_skills "$REPO/skills" "$HOME/.claude/skills" "$HOME/.claude/skills-backups"
 
 # GLOBAL_AGENTS.md is installed into each tool's global instruction path.
 link "$REPO/GLOBAL_AGENTS.md" "$HOME/.codex/AGENTS.md"
