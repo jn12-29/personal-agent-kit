@@ -1,6 +1,6 @@
 ---
 name: diagram-creator
-description: Create or revise text-based diagrams for documentation, specs, architecture notes, workflows, data flows, sequence interactions, C4 views, ER/class/state models, and lightweight timelines using Mermaid, PlantUML, D2, or ASCII. Use when the requested output is diagram source code or a maintainable diagram embedded in Markdown/docs. Do not own final quality for polished document/PPT figures, raster image generation, slide-deck design, or UI mockups.
+description: Use when the requested output is maintainable text diagram source for docs, specs, architecture notes, workflows, data flows, sequences, models, or lightweight timelines. Supports Mermaid, PlantUML, D2, and ASCII. Do not use for polished document/slide figure assets, raster images, or UI mockups.
 ---
 
 # Diagram Creator

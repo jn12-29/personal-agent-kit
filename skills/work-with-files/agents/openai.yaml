@@ -1,4 +1,4 @@
 interface:
   display_name: "Work With Files"
   short_description: "Persist useful work artifacts"
-  default_prompt: "Use $work-with-files to persist useful intermediate results, scripts, scratch data, findings, decisions, verification outputs, lessons, and supporting work artifacts as files when they have concrete durable value. Requirement, plan, spec, contract, and handoff state follow the repo's planning/spec convention."
+  default_prompt: "Use $work-with-files to save useful working artifacts as files for review, handoff, reuse, recovery, audit, or reproducible verification. Own persistence and storage hygiene for scratch notes, findings, scripts, observations, decisions, and outputs; not planning/spec structure."

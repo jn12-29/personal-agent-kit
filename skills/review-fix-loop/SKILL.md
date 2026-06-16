@@ -1,6 +1,6 @@
 ---
 name: review-fix-loop
-description: Use whenever a task modifies files — code, documentation, configuration, tests, scripts, prompts, examples, or generated project files. Enforces an explicit review-after-implementation loop with re-review after every fix, so review is never skipped or treated as optional final polish. For independent-review tiers, spawn read-only review subagents when subagent tooling exists. Trigger this even for small edits and quick fixes, and whenever the user asks for careful review, correctness, or end-to-end completion.
+description: Use whenever files are modified, including small edits. Owns the post-change review, fix, re-review, and targeted verification loop for code, docs, config, tests, scripts, prompts, examples, and generated project files.
 ---
 
 # Review-Fix Loop

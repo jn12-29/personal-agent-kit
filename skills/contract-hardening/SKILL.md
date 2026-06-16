@@ -1,6 +1,6 @@
 ---
 name: contract-hardening
-description: Use before or during cross-module work where documented contracts and implementation must stay aligned — shared types, configuration, schemas, serialization, runtime state, pipeline boundaries, or any public behavior other modules depend on. Enforces fixing the contract before changing implementation and forking multiple independent reviewers because self-review is biased.
+description: Use before or during cross-module work where documented contracts and implementation must stay aligned, including shared types, config, schemas, serialization, runtime state, pipeline boundaries, or public behavior. Owns contract-first fixes and independent review for substantial contract changes.
 ---
 
 # Iterative Contract and Implementation Hardening

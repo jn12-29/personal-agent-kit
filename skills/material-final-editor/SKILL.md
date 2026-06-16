@@ -1,6 +1,6 @@
 ---
 name: material-final-editor
-description: Adapt, revise, and review project materials for final-facing submission or delivery. Use when the task is to turn proposals, reports, plans, manuals, acceptance materials, or other project documents into a reader-facing deliverable without stale claims, draft language, or process leaks.
+description: Use when proposals, reports, plans, manuals, acceptance materials, or other project documents must become final-facing deliverables. Owns reader-ready wording, stale-claim removal, draft-language cleanup, and process-leak checks.
 ---
 
 # Material Final Editor

@@ -1,6 +1,6 @@
 ---
 name: improve-skills
-description: "Use when improving, rewriting, or hardening an existing installed skill or related skill set from user feedback, observed agent mistakes, review findings, unclear triggers, weak rationale, stale examples, missing validation/evals, trigger overlap, cross-skill coupling, or poor multi-agent behavior. Guides why-first, zero-coupled, eval-driven revision: tighten triggers, make each skill self-contained, keep bodies lean, update metadata, and validate changed behavior."
+description: "Use when revising existing skills or skill sets to fix routing, boundaries, rationale, workflow, validation, metadata, or observed agent failures. Owns trigger-focused, self-contained skill revisions with eval checks and lean descriptions."
 ---
 
 # Improve Skills
@@ -61,7 +61,17 @@ Do not add cross-references as a shortcut for boundary clarity. Rewrite boundari
 
 ## Trigger And Eval Checks
 
-The frontmatter `description` is the routing contract. Any condition required to trigger the skill belongs there, not only in the body.
+The frontmatter `description` is the always-visible routing contract. Write it so an agent can decide whether to load the skill from `name + description` alone. Any condition required to trigger the skill belongs there, not only in the body.
+
+For description edits, prefer this compact shape:
+
+```yaml
+description: Use when <core trigger>, including <high-value implicit cases>. Owns <artifact or behavior>. Do not use for <most likely near miss>.
+```
+
+Keep descriptions short enough to stay useful in always-loaded metadata: 35-60 English words for straightforward skills, 60-90 words when boundary risk is real, and more than 100 words only when the extra words materially improve routing. Use concrete user-intent verbs, artifact or domain nouns, and a small number of high-signal implicit triggers. Do not list every feature, repeat the whole workflow, name implementation details, or explain rationale better kept in the body.
+
+State boundaries with neutral task, artifact, format, risk, input, output, or ownership language instead of naming adjacent skills. Include a mandatory workflow constraint in the description only when it changes the routing decision.
 
 For wording or trigger edits, test at least:
 
@@ -77,7 +87,8 @@ Do not overfit to one prompt. The eval should represent the future request class
 
 Before finishing, check:
 
-- Frontmatter: `name` matches the folder; `description` says when to use the skill, what it owns, and why it should trigger.
+- Frontmatter: `name` matches the folder; `description` says when to use the skill, what it owns, and any high-risk near-miss boundary needed for routing.
+- Description budget: frontmatter stays routing-focused, compact, concrete, and free of implementation details or exhaustive feature lists.
 - Why: rationale names the agent mistake, consequence, required behavior, and exception or tradeoff.
 - Workflow: the body tells an agent what to do next, not just what to value.
 - Boundaries: ownership and non-ownership are expressed as task, artifact, risk, input, output, or validation language.

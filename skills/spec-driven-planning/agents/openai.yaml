@@ -1,4 +1,4 @@
 interface:
   display_name: "Spec Driven Planning"
   short_description: "Own plans/specs and active goal state"
-  default_prompt: "Use $spec-driven-planning to create the smallest useful requirement/goal snapshot, plan, spec, documentation contract, or agent handoff; resolve durable active planning state only when the task needs it."
+  default_prompt: "Use $spec-driven-planning before ambiguous, multi-step, cross-file, delegated, contract-sensitive, prompt/script/config, or public-behavior work to create the smallest useful goal, scope, acceptance criteria, verification plan, spec, documentation contract, or handoff."

@@ -1,6 +1,6 @@
 ---
 name: multi-agent-workflow
-description: Use when work spans multiple files or modules and responsibilities can be split by file set or topic — documentation consistency rewrites, cross-module API alignment, pre-implementation specification cleanup, or review tasks needing multiple perspectives. Proactively forks subagents for its trigger cases when subagent tooling exists, preserves main-agent context, partitions ownership, and structures agent prompts.
+description: Use when cross-file or cross-module work can be split by file set, topic, ownership, or review perspective. Owns agent partitioning, prompts, context budgeting, read-only review coordination, and integration rules.
 ---
 
 # Multi-Agent Workflow

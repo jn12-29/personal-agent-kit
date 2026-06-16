@@ -1,4 +1,4 @@
 interface:
   display_name: "Improve Skills"
-  short_description: "Improve skills with why/evals"
-  default_prompt: "Use $improve-skills to revise this skill or related skill set from observed failures, strengthen why and triggers, enforce zero coupling between skills, add realistic eval/trigger checks, and validate changed behavior."
+  short_description: "Improve skills with routing/evals"
+  default_prompt: "Use $improve-skills to revise this skill or related skill set from observed failures, tighten routing descriptions, strengthen why and boundaries, keep skills self-contained, add realistic eval/trigger checks, and validate changed behavior."

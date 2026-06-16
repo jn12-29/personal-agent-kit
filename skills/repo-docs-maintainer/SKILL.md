@@ -1,6 +1,6 @@
 ---
 name: repo-docs-maintainer
-description: "Use when creating, updating, auditing, or synchronizing repository-facing documentation such as README.md, AGENTS.md, CLAUDE.md, setup docs, command references, repo instruction files, or docs/snippets that mention install scripts and config examples. Owns routing facts to the right durable document, preventing drift between human-facing README content and agent-facing operating instructions, and validating that documented commands, paths, links, and conventions match the current repo."
+description: "Use when repository-facing docs must be created, audited, or synced with current scripts, config, paths, commands, install behavior, AGENTS.md, CLAUDE.md, or other instruction files. Owns README/setup/command docs and repo instruction accuracy."
 ---
 
 # Repo Docs Maintainer

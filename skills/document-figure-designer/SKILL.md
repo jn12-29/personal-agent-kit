@@ -1,6 +1,6 @@
 ---
 name: document-figure-designer
-description: Create, revise, and quality-check explanatory figure assets for documents and slides. Use for architecture, workflow, process, API, data-flow, algorithm, concept figures, DOCX/PDF/PPT-ready PNG/SVG assets, figure-caption cleanup tied to figure creation or replacement, readability QA, arrow routing, or replacing inaccurate illustrations. Not for whole-slide, whole-page, whole-deck layout/design, or slide/page-level titles inside exported figures by default.
+description: Use when creating, revising, or quality-checking explanatory figure assets for documents or slides, including architecture, workflow, process, API, data-flow, algorithm, and concept figures. Owns DOCX/PDF/PPT-ready PNG/SVG assets and readability QA, not whole-slide, page, or deck layout.
 ---
 
 # Document Figure Designer

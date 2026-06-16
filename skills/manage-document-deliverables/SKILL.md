@@ -1,6 +1,6 @@
 ---
 name: manage-document-deliverables
-description: Inspect, convert, regenerate, and preserve document source files and exported deliverables. Use when the task is about DOCX, Markdown, PDF, or similar file roles, including inventory, conversion, regeneration, snapshot handling, and source-vs-derived decisions.
+description: Use when document source files and exported deliverables must be inspected, converted, regenerated, or preserved. Owns DOCX, Markdown, PDF, and similar source-vs-derived file roles, inventory, conversion, snapshots, and regeneration decisions.
 ---
 
 # Manage Document Deliverables

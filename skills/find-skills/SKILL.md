@@ -1,6 +1,6 @@
 ---
 name: find-skills
-description: "Use when the user explicitly wants to discover, compare, install, update, or evaluate installable agent skills, or asks whether an installable skill exists for a capability. Do not trigger for ordinary one-off task execution or broad 'can you do X?' questions unless the user is seeking reusable skill installation."
+description: "Use when the user wants to discover, compare, evaluate, update, or install catalog/repo-sourced agent skills, including asking whether a capability exists as an installable skill. Do not use for ordinary one-off work the agent should perform directly."
 ---
 
 # Find Skills
