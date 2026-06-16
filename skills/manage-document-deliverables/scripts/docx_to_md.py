@@ -501,16 +501,16 @@ def build_parser() -> argparse.ArgumentParser:
     epilog = """\
 Examples:
   Convert a DOCX to Markdown without overwriting an existing .md:
-    python skills/project-material-editor/scripts/docx_to_md.py docs/report.docx
+    python skills/manage-document-deliverables/scripts/docx_to_md.py docs/report.docx
 
   Choose output and media locations explicitly:
-    python skills/project-material-editor/scripts/docx_to_md.py docs/report.docx -o review/report.md --media-dir review/report_media
+    python skills/manage-document-deliverables/scripts/docx_to_md.py docs/report.docx -o review/report.md --media-dir review/report_media
 
   Replace an existing Markdown output intentionally:
-    python skills/project-material-editor/scripts/docx_to_md.py docs/report.docx -o docs/report.md --overwrite
+    python skills/manage-document-deliverables/scripts/docx_to_md.py docs/report.docx -o docs/report.md --overwrite
 
   Extract text only:
-    python skills/project-material-editor/scripts/docx_to_md.py docs/report.docx --no-media --plain-inline
+    python skills/manage-document-deliverables/scripts/docx_to_md.py docs/report.docx --no-media --plain-inline
 
 Defaults and behavior:
   - Run from the project root with project-relative paths when possible.

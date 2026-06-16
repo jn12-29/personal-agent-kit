@@ -11,7 +11,7 @@ import pytest
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SCRIPT_DIR = REPO_ROOT / "skills" / "project-material-editor" / "scripts"
+SCRIPT_DIR = REPO_ROOT / "skills" / "manage-document-deliverables" / "scripts"
 
 
 def load_script(name: str):

@@ -63,13 +63,13 @@ def build_parser() -> argparse.ArgumentParser:
     epilog = """\
 Examples:
   Inventory headings, captions, and media:
-    python skills/project-material-editor/scripts/docx_inventory.py docs/report.docx
+    python skills/manage-document-deliverables/scripts/docx_inventory.py docs/report.docx
 
   Locate stale project names or process-leak terms:
-    python skills/project-material-editor/scripts/docx_inventory.py docs/report.docx --terms OLD_NAME TODO 转换层
+    python skills/manage-document-deliverables/scripts/docx_inventory.py docs/report.docx --terms OLD_NAME TODO 转换层
 
   Dump all non-empty paragraphs for manual review:
-    python skills/project-material-editor/scripts/docx_inventory.py docs/report.docx --dump-text
+    python skills/manage-document-deliverables/scripts/docx_inventory.py docs/report.docx --dump-text
 
 Defaults and behavior:
   - Run from the project root with project-relative paths when possible.

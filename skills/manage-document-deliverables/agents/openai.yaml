@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manage Document Deliverables"
+  short_description: "Manage document sources and exports"
+  default_prompt: "Use $manage-document-deliverables to classify, convert, regenerate, or preserve document source files and exported deliverables."

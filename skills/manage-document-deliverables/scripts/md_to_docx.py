@@ -195,7 +195,7 @@ def ensure_python_docx() -> None:
         raise DependencyError(
             "python-docx is required for fallback conversion. "
             "Use a temporary run such as: uv run --with python-docx python "
-            "skills/project-material-editor/scripts/md_to_docx.py input.md"
+            "skills/manage-document-deliverables/scripts/md_to_docx.py input.md"
         ) from exc
 
 
@@ -993,19 +993,19 @@ def build_parser() -> argparse.ArgumentParser:
     epilog = """\
 Examples:
   Built-in renderer, safe by default:
-    python skills/project-material-editor/scripts/md_to_docx.py docs/report.md
+    python skills/manage-document-deliverables/scripts/md_to_docx.py docs/report.md
 
   Replace an existing generated DOCX intentionally:
-    python skills/project-material-editor/scripts/md_to_docx.py docs/report.md --overwrite
+    python skills/manage-document-deliverables/scripts/md_to_docx.py docs/report.md --overwrite
 
   Use a reference DOCX template through Pandoc:
-    python skills/project-material-editor/scripts/md_to_docx.py docs/report.md --reference-doc templates/reference.docx
+    python skills/manage-document-deliverables/scripts/md_to_docx.py docs/report.md --reference-doc templates/reference.docx
 
   Tune common built-in renderer styles:
-    python skills/project-material-editor/scripts/md_to_docx.py docs/report.md --east-asia-font 宋体 --margin-cm 2.5
+    python skills/manage-document-deliverables/scripts/md_to_docx.py docs/report.md --east-asia-font 宋体 --margin-cm 2.5
 
   Use a JSON style config for built-in renderer details:
-    python skills/project-material-editor/scripts/md_to_docx.py docs/report.md --style-config styles/report-docx.json
+    python skills/manage-document-deliverables/scripts/md_to_docx.py docs/report.md --style-config styles/report-docx.json
 
 Defaults and behavior:
   - Run from the project root with project-relative paths when possible.
