@@ -1,4 +1,0 @@
-interface:
-  display_name: "Review-Fix Loop"
-  short_description: "Review, fix, re-review, verify"
-  default_prompt: "Use $review-fix-loop after modifying files to review the changed surface, fix confirmed blockers, re-review after each fix, and verify with targeted checks."

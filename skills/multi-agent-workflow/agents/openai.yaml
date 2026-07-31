@@ -1,4 +1,0 @@
-interface:
-  display_name: "Multi-Agent Workflow"
-  short_description: "Split cross-file work across agents"
-  default_prompt: "Use $multi-agent-workflow to split cross-file or cross-module work into clear subagent ownership, prompts, review perspectives, and integration steps."

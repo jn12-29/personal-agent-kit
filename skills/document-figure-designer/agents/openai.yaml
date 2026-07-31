@@ -1,4 +1,0 @@
-interface:
-  display_name: "Document Figure Designer"
-  short_description: "Design and QA document figure assets"
-  default_prompt: "Use $document-figure-designer to critically redraw, create, render, visually review, and verify polished document or slide figure assets. Run the mandatory AI-generated visual-reference pass for generated figures, exempt real screenshots and evidence-only current UI or product-state figures, use Chromium/Playwright for SVG or HTML/CSS raster export, verify exact text/data and readability, and do not add slide/page-level titles inside the exported figure by default."

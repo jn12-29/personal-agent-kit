@@ -1,4 +1,0 @@
-interface:
-  display_name: "Find Skills"
-  short_description: "Find installable catalog skills"
-  default_prompt: "Use $find-skills to discover, compare, evaluate, update, or install catalog/repo-sourced agent skills when the user wants reusable skill capability; verify current quality signals before recommending or installing, and default installs to the project unless the user explicitly asks for user-level/global install."

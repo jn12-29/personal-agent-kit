@@ -1,4 +1,0 @@
-interface:
-  display_name: "Contract Hardening"
-  short_description: "Align contracts and implementation"
-  default_prompt: "Use $contract-hardening to align documented contracts with implementation across shared types, configuration, schemas, serialization, runtime state, pipeline boundaries, and public behavior."

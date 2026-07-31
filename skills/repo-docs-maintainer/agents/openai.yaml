@@ -1,4 +1,0 @@
-interface:
-  display_name: "Repo Docs Maintainer"
-  short_description: "Keep README and agent docs aligned"
-  default_prompt: "Use $repo-docs-maintainer to audit or update README.md, AGENTS.md, CLAUDE.md, setup/command docs, and repo instruction files so human-facing and agent-facing instructions stay accurate, minimal, and non-duplicative."

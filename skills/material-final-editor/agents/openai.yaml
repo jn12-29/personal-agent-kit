@@ -1,4 +1,0 @@
-interface:
-  display_name: "Material Final Editor"
-  short_description: "Edit project materials for final submission"
-  default_prompt: "Use $material-final-editor to revise this project material as a final-facing deliverable."

@@ -1,14 +1,34 @@
 # personal-agent-kit
 
-Personal multi-agent setup kit for agent tools, including but not limited to Codex, OpenCode, and Claude Code.
+Branch-based instruction and skill profiles for agent tools.
 
-It keeps tool-neutral shared agent instructions, custom skills, and example configs in one repo, with helper scripts to install them into the tool paths this repo currently supports.
+`main` is the permanent zero-profile entrypoint: `GLOBAL_AGENTS.md` is empty and `skills/` contains no loadable skills. Install the links once, then switch branches to activate or deactivate a profile through the same filesystem paths.
+
+## Profiles
+
+| Branch | Purpose |
+| --- | --- |
+| `main` | Zero profile. Switching here disables repository-provided global instructions and skills. |
+| `profile/gpt-5.6-codex` | GPT-5.6 with Codex. Starts from the zero profile and gains instructions or skills only from observed needs. |
+| `legacy/gpt-5.5-codex` | Archived GPT-5.5 with Codex profile containing the previous instruction and skill set. |
+
+Update the repository and activate a profile:
+
+```bash
+git switch main
+git pull --ff-only origin main
+git fetch origin
+git switch profile/gpt-5.6-codex
+git pull --ff-only origin profile/gpt-5.6-codex
+```
+
+Return to the zero profile with `git switch main`. Start a new agent session after switching branches because an existing session may retain instructions and skills that it already loaded.
 
 ## Repository Layout
 
 - `AGENTS.md`: project-specific instructions for maintaining this repository.
-- `GLOBAL_AGENTS.md`: shared global agent behavior guidelines installed by current scripts into Codex, OpenCode, and Claude Code instruction load paths.
-- `skills/`: custom skills for reviews, contract checks, documentation maintenance, multi-agent work, and skill discovery across compatible agent tools.
+- `GLOBAL_AGENTS.md`: branch-specific shared instructions; intentionally empty on `main`.
+- `skills/`: branch-specific skills; contains no loadable skills on `main`.
 - `config/`: example Codex and OpenCode config files; Claude Code currently uses shared instructions and skills from this repo rather than a separate config example.
 - `scripts/install-custom-skills-and-instruction.sh`: links instructions and skills into local tool directories.
 - `scripts/install-custom-skills-and-instruction.ps1`: Windows PowerShell version of the install/link script.
@@ -35,6 +55,10 @@ git clone https://github.com/jn12-29/personal-agent-kit.git personal-agent-kit
 Set-Location personal-agent-kit
 powershell -ExecutionPolicy Bypass -File .\scripts\install-custom-skills-and-instruction.ps1
 ```
+
+Symbolically linked global instruction files follow branch changes automatically. If a global instruction file for Codex, OpenCode, or Claude Code used the hard-link or copy fallback, rerun the installer after every branch switch.
+
+The shared Codex/OpenCode skills directory also follows branch changes when installed as a symbolic link or Windows junction; rerun the installer after every branch switch if it used the copy fallback. Claude Code uses per-skill links, so rerun the installer after switching to a profile whose skill directory set differs. If a Claude skill used the copy fallback, remove that repository-provided copied skill directory manually before activating `main` or another profile; the installer deliberately preserves ordinary directories whose origin it cannot prove.
 
 ### Linked Targets
 
