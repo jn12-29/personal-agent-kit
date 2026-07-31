@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Link personal-agent-kit skills and GLOBAL_AGENTS.md into Codex, OpenCode, and Claude Code load paths.
+# Link personal-agent-kit skills and GLOBAL_AGENTS.md into Codex and OpenCode load paths.
 # Config is handled separately by scripts/install-config.sh.
 set -euo pipefail
 
@@ -66,68 +66,12 @@ link() {
   return 1
 }
 
-ensure_real_directory() {
-  local dst="$1"
-  mkdir -p "$(dirname "$dst")"
-
-  if [ -d "$dst" ] && [ ! -L "$dst" ]; then
-    return
-  fi
-
-  if [ -e "$dst" ] || [ -L "$dst" ]; then
-    local bak="$dst.bak.$(date +%Y%m%d%H%M%S)"
-    mv "$dst" "$bak"; echo "↪ 已备份: $dst → $bak"
-  fi
-
-  mkdir -p "$dst"
-}
-
-cleanup_stale_claude_skills() {
-  local src_dir="$1" dst_dir="$2"
-  local entry target
-
-  for entry in "$dst_dir"/*; do
-    [ -L "$entry" ] || continue
-    target="$(readlink "$entry")" || continue
-    case "$target" in
-      "$src_dir"/*)
-        if [ ! -e "$target" ]; then
-          rm "$entry"
-          echo "Removed stale Claude Code skill link: $entry → $target"
-        fi
-        ;;
-    esac
-  done
-}
-
-install_claude_skills() {
-  local src_dir="$1" dst_dir="$2" backup_dir="$3"
-  [ -d "$src_dir" ] || { echo "⚠ skills directory missing, skipped: $src_dir"; return; }
-
-  ensure_real_directory "$dst_dir"
-  cleanup_stale_claude_skills "$src_dir" "$dst_dir"
-
-  local skill skill_name found=0
-  for skill in "$src_dir"/*; do
-    [ -d "$skill" ] || continue
-    found=1
-    skill_name="$(basename "$skill")"
-    link "$skill" "$dst_dir/$skill_name" "$backup_dir"
-  done
-
-  if [ "$found" -eq 0 ]; then
-    echo "No skill directories found: $src_dir"
-  fi
-}
-
-# Skills source is $REPO/skills; Codex/OpenCode use ~/.agents/skills, Claude Code gets per-skill links.
+# Codex and OpenCode share the skills source at $REPO/skills.
 link "$REPO/skills" "$HOME/.agents/skills"
-install_claude_skills "$REPO/skills" "$HOME/.claude/skills" "$HOME/.claude/skills-backups"
 
-# GLOBAL_AGENTS.md is installed into each tool's global instruction path.
+# GLOBAL_AGENTS.md is installed into the supported tools' global instruction paths.
 link "$REPO/GLOBAL_AGENTS.md" "$HOME/.codex/AGENTS.md"
 link "$REPO/GLOBAL_AGENTS.md" "$HOME/.config/opencode/AGENTS.md"
-link "$REPO/GLOBAL_AGENTS.md" "$HOME/.claude/CLAUDE.md"
 
 echo
 echo "完成。config 可用脚本覆盖安装（会先备份已有文件）："

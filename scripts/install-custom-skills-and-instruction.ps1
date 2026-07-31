@@ -223,118 +223,12 @@ function Install-LinkOrCopy {
     }
 }
 
-function Ensure-RealDirectory {
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$Path
-    )
-
-    $parent = Split-Path -Parent $Path
-    if ($parent) {
-        New-Item -ItemType Directory -Path $parent -Force | Out-Null
-    }
-
-    if (Test-Path -LiteralPath $Path) {
-        $item = Get-Item -LiteralPath $Path -Force
-        if ($item.PSIsContainer -and -not $item.LinkType) {
-            return
-        }
-    }
-
-    $backupPath = $null
-    Backup-Path $Path ([ref]$backupPath)
-    New-Item -ItemType Directory -Path $Path -Force | Out-Null
-}
-
-function Remove-StaleClaudeSkills {
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$SourceDirectory,
-        [Parameter(Mandatory = $true)]
-        [string]$DestinationDirectory
-    )
-
-    $separator = [string][System.IO.Path]::DirectorySeparatorChar
-    $sourceRoot = Resolve-FullPath $SourceDirectory
-    if (-not $sourceRoot.EndsWith($separator)) {
-        $sourceRoot = "$sourceRoot$separator"
-    }
-
-    $comparison = if ([System.IO.Path]::DirectorySeparatorChar -eq "\") {
-        [System.StringComparison]::OrdinalIgnoreCase
-    } else {
-        [System.StringComparison]::Ordinal
-    }
-
-    $items = Get-ChildItem -LiteralPath $DestinationDirectory -Force -ErrorAction SilentlyContinue
-    foreach ($item in $items) {
-        if ($item.LinkType -ne "SymbolicLink" -and $item.LinkType -ne "Junction") {
-            continue
-        }
-
-        $target = $item.Target
-        if ($target -is [System.Array]) {
-            $target = $target[0]
-        }
-        if (-not $target) {
-            continue
-        }
-
-        if ([System.IO.Path]::IsPathRooted($target)) {
-            $targetPath = $target
-        } else {
-            $targetPath = Join-Path (Split-Path -Parent $item.FullName) $target
-        }
-
-        $targetFullPath = Resolve-FullPath $targetPath
-        if (-not $targetFullPath.StartsWith($sourceRoot, $comparison)) {
-            continue
-        }
-
-        if (Test-Path -LiteralPath $targetFullPath) {
-            continue
-        }
-
-        Remove-InstalledPath $item.FullName
-        Write-Output "Removed stale Claude Code skill link: $($item.FullName) -> $target"
-    }
-}
-
-function Install-ClaudeSkills {
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$SourceDirectory,
-        [Parameter(Mandatory = $true)]
-        [string]$DestinationDirectory
-    )
-
-    if (-not (Test-Path -LiteralPath $SourceDirectory -PathType Container)) {
-        Write-Output "Missing skills directory, skipped: $SourceDirectory"
-        return
-    }
-
-    Ensure-RealDirectory $DestinationDirectory
-    Remove-StaleClaudeSkills $SourceDirectory $DestinationDirectory
-
-    $skills = Get-ChildItem -LiteralPath $SourceDirectory -Directory
-    if (-not $skills) {
-        Write-Output "No skill directories found: $SourceDirectory"
-        return
-    }
-
-    foreach ($skill in $skills) {
-        Install-LinkOrCopy $skill.FullName (Join-Path $DestinationDirectory $skill.Name) (Join-Path $HOME ".claude/skills-backups")
-    }
-}
-
-# Skills source is $repo/skills; Codex/OpenCode use ~/.agents/skills, Claude Code gets per-skill links.
+# Codex and OpenCode share the skills source at $repo/skills.
 Install-LinkOrCopy (Join-Path $repo "skills") (Join-Path $HOME ".agents/skills")
-Install-ClaudeSkills (Join-Path $repo "skills") (Join-Path $HOME ".claude/skills")
 
-# GLOBAL_AGENTS.md is installed into each tool's global instruction path.
+# GLOBAL_AGENTS.md is installed into the supported tools' global instruction paths.
 Install-LinkOrCopy (Join-Path $repo "GLOBAL_AGENTS.md") (Join-Path $HOME ".codex/AGENTS.md")
 Install-LinkOrCopy (Join-Path $repo "GLOBAL_AGENTS.md") (Join-Path $HOME ".config/opencode/AGENTS.md")
-Install-LinkOrCopy (Join-Path $repo "GLOBAL_AGENTS.md") (Join-Path $HOME ".claude/CLAUDE.md")
 
 Write-Output ""
 Write-Output "Done. To install config files with backup:"
