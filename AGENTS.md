@@ -4,7 +4,7 @@ Project-specific instructions for maintaining this repository.
 
 ## Repository Contract
 
-- This repository is a multi-agent, multi-tool setup kit for agent tools, including but not limited to Codex, OpenCode, and Claude Code.
+- This repository is a multi-agent setup kit for Codex and OpenCode.
 - Shared documentation and skills use tool-neutral terms by default: `agent`, `assistant`, `skill`, and `instruction file`.
 - Use tool names only for actual install paths, config files, commands, provider names, or tool-specific integrations.
 - When changing supported tools, installation destinations, or instruction filenames, update `README.md`, `GLOBAL_AGENTS.md`, `AGENTS.md`, Bash/PowerShell install scripts, and affected skill metadata together.
@@ -28,5 +28,5 @@ Project-specific instructions for maintaining this repository.
 
 - For Python script changes under `skills/*/scripts/`, run `python -m py_compile <changed scripts>` and the relevant script `--help` commands. When tests exist, run `uv run --with pytest [--with <test dependency>] python -m pytest <tests>`.
 - For Bash script changes, run `bash -n <script>`.
-- For install-path or instruction-file changes, run `rg -n "AGENTS\\.md|GLOBAL_AGENTS\\.md|CLAUDE\\.md" README.md scripts AGENTS.md GLOBAL_AGENTS.md` and confirm the source and destination paths agree.
+- For install-path or instruction-file changes, run `rg -n "AGENTS\\.md|GLOBAL_AGENTS\\.md" README.md scripts AGENTS.md GLOBAL_AGENTS.md` and confirm the source and destination paths agree.
 - Before finishing documentation changes, search the changed files for stale filenames or obsolete install mappings.

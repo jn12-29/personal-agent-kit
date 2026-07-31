@@ -1,6 +1,6 @@
 ---
 name: repo-docs-maintainer
-description: "Use when repository-facing docs must be created, audited, or synced with current scripts, config, paths, commands, install behavior, AGENTS.md, CLAUDE.md, or other instruction files. Owns README/setup/command docs and repo instruction accuracy."
+description: "Use when repository-facing docs must be created, audited, or synced with current scripts, config, paths, commands, install behavior, AGENTS.md, or other instruction files. Owns README/setup/command docs and repo instruction accuracy."
 ---
 
 # Repo Docs Maintainer
@@ -16,7 +16,7 @@ Use this skill to route facts deliberately, make the smallest current-state edit
 Use this skill for repository-facing documentation work involving:
 
 - `README.md`, nested READMEs, setup docs, usage docs, command references, and project overviews.
-- `AGENTS.md`, nested agent instruction files, and compatibility instruction files such as `CLAUDE.md` when present.
+- `AGENTS.md`, nested agent instruction files, and compatibility instruction files when present.
 - Documentation references to install scripts, shell snippets, config examples, command tables, path inventories, and docs that must stay synchronized with them.
 - Audits for stale features, moved paths, renamed tools, changed install destinations, obsolete roadmap/status claims, or duplicated sources of truth.
 
@@ -86,7 +86,7 @@ Should trigger:
 
 - "Check whether README still matches the install scripts."
 - "Sync README.md and AGENTS.md after renaming the test command."
-- "Consolidate CLAUDE.md into AGENTS.md and remove duplicated instructions."
+- "Consolidate a compatibility instruction file into AGENTS.md and remove duplicated instructions."
 - "Audit repo docs for stale paths and setup commands."
 
 Should not trigger:

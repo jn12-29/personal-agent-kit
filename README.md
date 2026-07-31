@@ -1,15 +1,15 @@
 # personal-agent-kit
 
-Personal multi-agent setup kit for agent tools, including but not limited to Codex, OpenCode, and Claude Code.
+Personal multi-agent setup kit for Codex and OpenCode.
 
 It keeps tool-neutral shared agent instructions, custom skills, and example configs in one repo, with helper scripts to install them into the tool paths this repo currently supports.
 
 ## Repository Layout
 
 - `AGENTS.md`: project-specific instructions for maintaining this repository.
-- `GLOBAL_AGENTS.md`: shared global agent behavior guidelines installed by current scripts into Codex, OpenCode, and Claude Code instruction load paths.
+- `GLOBAL_AGENTS.md`: shared global agent behavior guidelines installed into Codex and OpenCode instruction load paths.
 - `skills/`: custom skills for reviews, contract checks, documentation maintenance, multi-agent work, and skill discovery across compatible agent tools.
-- `config/`: example Codex and OpenCode config files; Claude Code currently uses shared instructions and skills from this repo rather than a separate config example.
+- `config/`: example Codex and OpenCode config files.
 - `scripts/install-custom-skills-and-instruction.sh`: links instructions and skills into local tool directories.
 - `scripts/install-custom-skills-and-instruction.ps1`: Windows PowerShell version of the install/link script.
 - `scripts/install-config.sh`: copies config files into local tool directories, backing up existing files first.
@@ -36,6 +36,10 @@ Set-Location personal-agent-kit
 powershell -ExecutionPolicy Bypass -File .\scripts\install-custom-skills-and-instruction.ps1
 ```
 
+Symbolically linked global instruction files follow branch changes automatically. If a global instruction file used the hard-link or copy fallback, rerun the installer after every branch switch.
+
+The shared Codex/OpenCode skills directory also follows branch changes when installed as a symbolic link or Windows junction; rerun the installer after every branch switch if it used the copy fallback.
+
 ### Linked Targets
 
 The install script links:
@@ -43,16 +47,12 @@ The install script links:
 Here `<repo>` is the cloned repo directory that contains the script being run.
 
 - `~/.agents/skills` -> `<repo>/skills`
-- `~/.claude/skills/<skill-name>` -> `<repo>/skills/<skill-name>` for each skill directory
 - `~/.codex/AGENTS.md` -> `<repo>/GLOBAL_AGENTS.md`
 - `~/.config/opencode/AGENTS.md` -> `<repo>/GLOBAL_AGENTS.md`
-- `~/.claude/CLAUDE.md` -> `<repo>/GLOBAL_AGENTS.md`
 
 ### Backup And Sync Behavior
 
-Existing targets are backed up as `.bak.<timestamp>` before replacement, including `~/.agents/skills`. For Claude Code skills, `~/.claude/skills` is kept as a real directory; if it already exists as a file or whole-directory link, it is backed up before per-skill links are installed. Per-skill Claude Code conflicts are backed up outside the scanned skills directory, under `~/.claude/skills-backups/<skill-name>.bak.<timestamp>`.
-
-Rerunning the install script synchronizes Claude Code skills by removing stale links or junctions in `~/.claude/skills` that point into `<repo>/skills/` when the linked target no longer exists. User-installed skills, ordinary directories, links to other locations, and copy fallback directories whose origin cannot be proven are left in place.
+Existing targets are backed up as `.bak.<timestamp>` before replacement, including `~/.agents/skills`.
 
 ### Link Fallback Behavior
 

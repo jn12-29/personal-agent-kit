@@ -83,8 +83,7 @@ FIGURE_RENDERER="${FIGURE_RENDERER:-}"
 if [ -z "$FIGURE_RENDERER" ]; then
   for candidate in \
     "$PWD/skills/document-figure-designer/scripts/render_with_playwright.py" \
-    "$HOME/.agents/skills/document-figure-designer/scripts/render_with_playwright.py" \
-    "$HOME/.claude/skills/document-figure-designer/scripts/render_with_playwright.py"
+    "$HOME/.agents/skills/document-figure-designer/scripts/render_with_playwright.py"
   do
     if [ -f "$candidate" ]; then
       FIGURE_RENDERER="$candidate"
