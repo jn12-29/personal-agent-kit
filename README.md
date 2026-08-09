@@ -10,12 +10,6 @@ Branch-based instruction and skill profiles for Codex and OpenCode. Install the 
 | `profile/gpt-5.6-codex` | GPT-5.6 Codex profile, extended only in response to observed needs. |
 | `legacy/gpt-5.5-codex` | Archived GPT-5.5 Codex instructions and skills. |
 
-The current GPT-5.6 profile provides:
-
-- Communication and response-style instructions in `GLOBAL_AGENTS.md`.
-- `run-experiments` for running and monitoring long-running experiments.
-- `work-with-files` for persistent task artifacts under an ignored `.work/` directory.
-
 ## Install
 
 Clone the repository and install shared instructions and skills:
