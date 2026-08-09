@@ -12,6 +12,11 @@ Branch-based instruction and skill profiles for agent tools.
 | `profile/gpt-5.6-codex` | GPT-5.6 with Codex. Starts from the zero profile and gains instructions or skills only from observed needs. |
 | `legacy/gpt-5.5-codex` | Archived GPT-5.5 with Codex profile containing the previous instruction and skill set. |
 
+The `profile/gpt-5.6-codex` branch currently provides:
+
+- English-first communication and response-style preferences in `GLOBAL_AGENTS.md`.
+- `work-with-files`: persists task-local working artifacts in isolated Git repositories under `.work/`, while the surrounding project repository ignores `.work/`.
+
 Update the repository and activate a profile:
 
 ```bash

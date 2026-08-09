@@ -1,0 +1,4 @@
+interface:
+  display_name: "Work With Files"
+  short_description: "Persist task work in isolated local Git"
+  default_prompt: "Use $work-with-files to persist a task in an isolated Git repository under .work, keep goal and approach files concise, write detailed reports, and commit meaningful checkpoints without touching the outer repository."
