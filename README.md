@@ -1,146 +1,90 @@
 # personal-agent-kit
 
-Branch-based instruction and skill profiles for agent tools.
-
-`main` is the permanent zero-profile entrypoint: `GLOBAL_AGENTS.md` is empty and `skills/` contains no loadable skills. Install the links once, then switch branches to activate or deactivate a profile through the same filesystem paths.
+Branch-based instruction and skill profiles for Codex and OpenCode. Install the links once, then switch branches to change profiles without changing tool paths.
 
 ## Profiles
 
 | Branch | Purpose |
 | --- | --- |
-| `main` | Zero profile. Switching here disables repository-provided global instructions and skills. |
-| `profile/gpt-5.6-codex` | GPT-5.6 with Codex. Starts from the zero profile and gains instructions or skills only from observed needs. |
-| `legacy/gpt-5.5-codex` | Archived GPT-5.5 with Codex profile containing the previous instruction and skill set. |
+| `main` | Permanent zero profile: empty `GLOBAL_AGENTS.md` and no loadable skills. |
+| `profile/gpt-5.6-codex` | GPT-5.6 Codex profile, extended only in response to observed needs. |
+| `legacy/gpt-5.5-codex` | Archived GPT-5.5 Codex instructions and skills. |
 
-Update the repository and activate a profile:
+The current GPT-5.6 profile provides:
 
-```bash
-git switch main
-git pull --ff-only origin main
-git fetch origin
-git switch profile/gpt-5.6-codex
-git pull --ff-only origin profile/gpt-5.6-codex
-```
-
-Return to the zero profile with `git switch main`. Start a new agent session after switching branches because an existing session may retain instructions and skills that it already loaded.
-
-## Repository Layout
-
-- `AGENTS.md`: project-specific instructions for maintaining this repository.
-- `GLOBAL_AGENTS.md`: branch-specific shared instructions; intentionally empty on `main`.
-- `skills/`: branch-specific skills; contains no loadable skills on `main`.
-- `config/`: example Codex and OpenCode config files.
-- `scripts/install-custom-skills-and-instruction.sh`: links instructions and skills into local tool directories.
-- `scripts/install-custom-skills-and-instruction.ps1`: Windows PowerShell version of the install/link script.
-- `scripts/install-config.sh`: copies config files into local tool directories, backing up existing files first.
-- `scripts/install-config.ps1`: Windows PowerShell version of the config install script.
-- `scripts/planning-with-files/`: helper scripts for project-level installation of the external `planning-with-files` skill.
+- Communication and response-style instructions in `GLOBAL_AGENTS.md`.
+- `run-experiments` for running and monitoring long-running experiments.
+- `work-with-files` for persistent task artifacts under an ignored `.work/` directory.
 
 ## Install
 
-### Install Shared Instructions And Skills
-
-macOS / Linux:
+Clone the repository and install shared instructions and skills:
 
 ```bash
-git clone https://github.com/jn12-29/personal-agent-kit.git personal-agent-kit
+git clone https://github.com/jn12-29/personal-agent-kit.git
 cd personal-agent-kit
 bash scripts/install-custom-skills-and-instruction.sh
 ```
 
-Windows PowerShell:
+On Windows PowerShell:
 
 ```powershell
-git clone https://github.com/jn12-29/personal-agent-kit.git personal-agent-kit
+git clone https://github.com/jn12-29/personal-agent-kit.git
 Set-Location personal-agent-kit
 powershell -ExecutionPolicy Bypass -File .\scripts\install-custom-skills-and-instruction.ps1
 ```
 
-Symbolically linked global instruction files follow branch changes automatically. If a global instruction file used the hard-link or copy fallback, rerun the installer after every branch switch.
-
-The shared Codex/OpenCode skills directory also follows branch changes when installed as a symbolic link or Windows junction; rerun the installer after every branch switch if it used the copy fallback.
-
-### Linked Targets
-
-The install script links:
-
-Here `<repo>` is the cloned repo directory that contains the script being run.
+The installer links these paths, backing up existing targets as `.bak.<timestamp>` first:
 
 - `~/.agents/skills` -> `<repo>/skills`
 - `~/.codex/AGENTS.md` -> `<repo>/GLOBAL_AGENTS.md`
 - `~/.config/opencode/AGENTS.md` -> `<repo>/GLOBAL_AGENTS.md`
 
-### Backup And Sync Behavior
+If linking fails, the installer asks before using a platform-appropriate fallback. A symlink or Windows junction follows branch changes automatically; after a copy or hard-link fallback, rerun the installer when switching branches.
 
-Existing targets are backed up as `.bak.<timestamp>` before replacement, including `~/.agents/skills`.
+## Switch Profiles
 
-### Link Fallback Behavior
-
-The install scripts do not silently fall back when linking fails: macOS/Linux prints the symlink failure and asks before copying as a fallback; Windows prints the failure reason and asks before using a junction, hard link, or copy fallback. If fallback is declined or fails, the backup is restored.
-
-### Install planning-with-files Into A Project
-
-The `scripts/planning-with-files/` helpers install the external `planning-with-files` skill into the project where you run them. Run the Codex helper from a target project root to install `.codex/skills/planning-with-files`, `.codex/hooks/`, and `.codex/hooks.json`; existing conflicting targets are backed up first. Run the OpenCode helper from a target project root to invoke `npx skills add OthmanAdi/planning-with-files --skill planning-with-files` without `-g`, using the Skills CLI project-level default.
-
-Example: install `planning-with-files` into another project by changing into that project's root first, then running one helper from this kit:
+Activate the GPT-5.6 profile:
 
 ```bash
-cd /path/to/target-project
-bash /path/to/personal-agent-kit/scripts/planning-with-files/codex.sh
-# or, for OpenCode:
-bash /path/to/personal-agent-kit/scripts/planning-with-files/opencode.sh
+git fetch origin
+git switch profile/gpt-5.6-codex
+git pull
 ```
 
-Windows PowerShell:
+Return to the zero profile:
 
-```powershell
-Set-Location C:\path\to\target-project
-powershell -ExecutionPolicy Bypass -File C:\path\to\personal-agent-kit\scripts\planning-with-files\codex.ps1
-# or, for OpenCode:
-powershell -ExecutionPolicy Bypass -File C:\path\to\personal-agent-kit\scripts\planning-with-files\opencode.ps1
+```bash
+git switch main
+git pull
 ```
 
-### Install Example Configs
+Start a new agent session after switching because an existing session may retain instructions and skills it already loaded.
 
-To overwrite local config files from `config/`, with backups:
+## Optional Tools
+
+### Example Configs
+
+Install the example Codex and OpenCode configs, backing up existing files first:
 
 ```bash
 bash scripts/install-config.sh
 ```
 
-Windows PowerShell:
-
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\install-config.ps1
 ```
 
-The OpenCode example uses `codex` as a provider alias in `config/opencode.json`; that alias is a config value, not a repository-wide Codex-only scope.
+The examples use `CCH_API_KEY` for their provider credentials. The `codex` provider name in `config/opencode.json` is a configuration alias.
 
-### Configure Provider API Key
+### planning-with-files
 
-If you use the included model provider examples, add this to `~/.bashrc` or `~/.zshrc`:
-
-```bash
-export CCH_API_KEY=""
-```
-
-Or append it directly.
-
-Bash:
+From a target project root, install the external `planning-with-files` skill with the appropriate helper:
 
 ```bash
-printf '\nexport CCH_API_KEY=""\n' >> ~/.bashrc
+bash /path/to/personal-agent-kit/scripts/planning-with-files/codex.sh
+# or
+bash /path/to/personal-agent-kit/scripts/planning-with-files/opencode.sh
 ```
 
-Zsh:
-
-```bash
-printf '\nexport CCH_API_KEY=""\n' >> ~/.zshrc
-```
-
-PowerShell:
-
-```powershell
-New-Item -ItemType File -Path $PROFILE -Force
-Add-Content -Path $PROFILE -Value '$env:CCH_API_KEY=""'
-```
+PowerShell equivalents are available as `codex.ps1` and `opencode.ps1` in the same directory. Existing conflicting targets are backed up first.
