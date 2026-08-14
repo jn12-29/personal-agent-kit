@@ -7,6 +7,7 @@ Project-specific instructions for maintaining this repository.
 - This repository distributes branch-based instruction and skill profiles for agent tools.
 - `main` is the permanent zero profile: keep `GLOBAL_AGENTS.md` empty and do not add loadable skill directories under `skills/`.
 - Model- and host-specific instructions and skills belong on profile branches, not on `main`.
+- Name active profile branches `profile/<model>-<host>` and archived profile branches `legacy/<model>-<host>`, using lowercase names.
 - Shared documentation and skills use tool-neutral terms by default: `agent`, `assistant`, `skill`, and `instruction file`.
 - Use tool names only for actual install paths, config files, commands, provider names, or tool-specific integrations.
 - When changing supported tools, installation destinations, or instruction filenames, update `README.md`, `GLOBAL_AGENTS.md`, `AGENTS.md`, Bash/PowerShell install scripts, and affected skill metadata together.
@@ -22,14 +23,7 @@ Project-specific instructions for maintaining this repository.
 ## Maintenance Rules
 
 - Keep `README.md`, `GLOBAL_AGENTS.md`, `AGENTS.md`, and install scripts in sync when instruction filenames or install destinations change.
-- Keep the profile inventory and branch-switch instructions in `README.md` current when profile branches change.
+- Keep `README.md` concise and identical across `main` and profile branches. Limit it to the repository purpose, initial installation, linked targets, and basic branch switching; do not enumerate profile branches or document optional workflows there.
 - When changing install behavior, update both Bash and PowerShell scripts unless the change is explicitly platform-specific.
+- Develop skills, including changes to existing skills, in an isolated task workspace under `.work/` according to the `$work-with-files` rules; keep all in-progress work outside the branch's loadable `skills/` directories, and only when the user explicitly asks to publish, synchronize the completed skill from its task workspace into `skills/` with a copy command.
 - Do not put general agent behavior guidelines in this file. Put shared global guidance in `GLOBAL_AGENTS.md`.
-- Keep this file lean and project-specific; stable repo conventions belong here, human onboarding belongs in `README.md`.
-
-## Verification
-
-- For Python script changes under `skills/*/scripts/`, run `python -m py_compile <changed scripts>` and the relevant script `--help` commands. When tests exist, run `uv run --with pytest [--with <test dependency>] python -m pytest <tests>`.
-- For Bash script changes, run `bash -n <script>`.
-- For install-path or instruction-file changes, run `rg -n "AGENTS\\.md|GLOBAL_AGENTS\\.md" README.md scripts AGENTS.md GLOBAL_AGENTS.md` and confirm the source and destination paths agree.
-- Before finishing documentation changes, search the changed files for stale filenames or obsolete install mappings.
