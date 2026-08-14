@@ -24,12 +24,6 @@ Project-specific instructions for maintaining this repository.
 - Keep `README.md`, `GLOBAL_AGENTS.md`, `AGENTS.md`, and install scripts in sync when instruction filenames or install destinations change.
 - Keep the profile inventory and branch-switch instructions in `README.md` current when profile branches change.
 - When changing install behavior, update both Bash and PowerShell scripts unless the change is explicitly platform-specific.
+- Develop skills, including changes to existing skills, in an isolated task workspace under `.work/` according to the `$work-with-files` rules; keep all in-progress work outside the branch's loadable `skills/` directories, and only when the user explicitly asks to publish, synchronize the completed skill from its task workspace into `skills/` with a copy command.
 - Do not put general agent behavior guidelines in this file. Put shared global guidance in `GLOBAL_AGENTS.md`.
 - Keep this file lean and project-specific; stable repo conventions belong here, human onboarding belongs in `README.md`.
-
-## Verification
-
-- For Python script changes under `skills/*/scripts/`, run `python -m py_compile <changed scripts>` and the relevant script `--help` commands. When tests exist, run `uv run --with pytest [--with <test dependency>] python -m pytest <tests>`.
-- For Bash script changes, run `bash -n <script>`.
-- For install-path or instruction-file changes, run `rg -n "AGENTS\\.md|GLOBAL_AGENTS\\.md" README.md scripts AGENTS.md GLOBAL_AGENTS.md` and confirm the source and destination paths agree.
-- Before finishing documentation changes, search the changed files for stale filenames or obsolete install mappings.

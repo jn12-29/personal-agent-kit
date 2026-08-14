@@ -1,71 +1,86 @@
 ---
 name: work-with-files
-description: Use when task-local artifacts need to persist beyond chat for recovery, review, handoff, audit, reuse, or reproducibility. Creates one isolated Git repository per task under `.work/`, keeps goal and approach records concise, stores detailed reports, and commits meaningful checkpoints. Do not use for trivial work or ordinary project-file edits alone.
+description: Use when the user requests a persistent task workspace or when task artifacts must persist across sessions or agents for recovery, review, handoff, audit, reuse, or reproducibility. Store them in an isolated Git repository for each task workspace under `.work/`. Ordinary project edits, one-turn work, routine command output, and final deliverables do not by themselves justify creating a task workspace.
 ---
 
 # Work With Files
 
-Persist useful task work without confusing temporary artifacts with project files or final deliverables. Create a workspace only when persistence has concrete value; keep trivial answers, throwaway calculations, and ordinary command output in chat.
+## Terms
 
-## Task Workspace
+Within this skill, the following terms have these meanings:
 
-1. Locate the project root, or use the current task root when no project repository exists.
-2. Ensure the outer project Git repository ignores `/.work/`.
-3. Create one directory per task as `.work/YYYY-MM-DD-HHmm-short-slug/`.
-4. Initialize the task directory as an independent Git repository on branch `main`. Do not add a remote.
-5. Use the existing Git identity when available. Otherwise set a neutral identity only in the task repository; never change global Git configuration.
-6. Create only the artifacts the task needs.
+- **Host root**: the Git repository root containing the agent session's working directory, or the working directory itself when no repository exists. It contains the `.work` container.
+- **Host repository**: the Git repository rooted at the host root, when one exists. It is separate from every task workspace's Git repository.
+- **`.work` container**: `<host-root>/.work/`. It contains task workspaces and is not itself a Git repository.
+- **Task workspace**: one direct child of the `.work` container, associated with one user goal and initialized as an independent Git repository.
+- **Control files**: `goal.md`, `approach.md`, and `run-log.md` at the root of a task workspace.
+- **Workspace artifact**: any file stored in a task workspace as part of the work, including control files, supporting files, generated results, and final deliverables.
+- **Final deliverable**: an output the user asked to receive or use.
+
+## Activation
+
+If the skill is invoked for work that does not require persistent task state, continue without creating a task workspace.
+
+## Initialize the `.work` Container
+
+Derive the host root from the agent session's working directory. Use `<host-root>/.work/` if it exists. If absent, ensure `/.work/` is ignored by the host repository when one exists, then create the container. Do not initialize the container as a Git repository.
+
+## Reuse or Initialize Task Workspace
+
+1. Use a known task workspace path when available. Otherwise, compare the current goal and constraints with the `goal.md` files under the `.work` container. Do not select by recency; ask the user when the match is ambiguous.
+2. If a clear match exists, read its control files and relevant reports, then reuse it without reinitializing or overwriting it.
+3. If none matches, create an unused `<host-root>/.work/YYYY-MM-DD-HHmm-short-slug/` and initialize it as an independent Git repository on branch `main` without a remote. Use Git's configured identity; if none is available, set a neutral identity in the task workspace only.
+4. For a new task workspace, initialize the control files according to the Artifact Contract, then commit the initial state before substantive work.
+
+Default layout:
 
 ```text
-.work/YYYY-MM-DD-HHmm-short-slug/
-  .git/
-  goal.md
-  approach.md
-  run-log.md
-  reports/
-  raw/       # optional evidence or extracts
-  scripts/   # optional task-local helpers
-  outputs/   # optional intermediates
+.work/
+  YYYY-MM-DD-HHmm-short-slug/
+    .git/
+    goal.md
+    approach.md
+    run-log.md
 ```
 
-The outer project repository must ignore `.work/`. Never commit or push the outer repository through this workflow, and never treat files under `.work/` as delivered project artifacts.
+Common directories include `reports/` for detailed findings, `raw/` for source evidence, `scripts/` for task-local helpers, and `outputs/` for generated results.
+
+Do not commit or push the host repository as part of this workflow.
 
 ## Artifact Contract
 
-| Artifact | Content and authority |
+| Artifact | Purpose and contents |
 | --- | --- |
-| `goal.md` | Keep the user's core need, confirmed constraints and non-goals, observable success condition, and material unresolved questions concise and current. |
-| `approach.md` | Keep only the current high-level strategy, major phases, important assumptions or architectural choices, and next meaningful checkpoint. |
-| `reports/YYYY-MM-DD-HHmm-topic.md` | Record detailed scope, inputs, methods or commands, concrete findings with identifiers, decisions and rationale, verification, uncertainty, and output paths as relevant. |
-| `run-log.md` | Maintain a concise chronological index of meaningful events and links. Use local time with a numeric UTC offset, for example `2026-08-09 14:37 +08:00`. |
-| `raw/`, `scripts/`, `outputs/` | Keep supporting evidence, task-local helpers, and intermediate outputs only when they aid review, recovery, reuse, or reproducibility. |
+| `goal.md` | Keep a concise, current statement of the user's core need, binding constraints and non-goals, observable success condition, and unresolved questions that could change the work. |
+| `approach.md` | Keep only the current high-level strategy, major phases, important assumptions or architectural choices, and next checkpoint. |
+| `run-log.md` | Maintain a concise chronological index of decisions and events that help recovery, with relevant links. Use local time with a numeric UTC offset, for example `2026-08-09 14:37 +08:00`. |
+| `reports/YYYY-MM-DD-HHmm-topic.md` | Use for detailed findings that must persist for handoff, audit, or reproducibility and are too detailed for the control files. |
+| Other workspace artifacts | Keep supporting evidence, helpers, and generated results under names and structures suited to the current goal. |
 
-Preserve the semantic core of the user's need, not necessarily the original wording. Treat wording, suggested implementations, and earlier agent proposals as revisable unless the user explicitly makes them binding constraints. Do not silently redefine the core need; discuss material reinterpretations with the user first.
+Preserve the semantic core of the user's need, not necessarily the original wording. Treat suggested implementations as revisable unless the user makes them binding constraints. Discuss any reinterpretation that would change the core need, scope, binding constraints, or success condition.
 
-Keep `goal.md` and `approach.md` as current-state control files, not histories. Revise the approach when evidence or user discussion supports a better solution. When the user changes the goal, update it and record the decision in `run-log.md`; Git preserves the earlier state.
+Keep `goal.md` and `approach.md` as concise current-state controls, not activity logs. Revise `goal.md` only when one of the elements defined in the Artifact Contract changes. Revise `approach.md` only when the current strategy, major phase, important assumptions or architectural choices, or next checkpoint changes.
 
-Keep reports concrete and detailed, but place bulky raw output in a supporting artifact and link to it instead of duplicating it.
+Do not update either file for routine progress, validation results, commits, or wording changes that preserve meaning. If leaving a file unchanged would not mislead a resuming agent or change its next action, leave it untouched. When revision is necessary, rewrite or consolidate the current state instead of appending history. Record only recovery-relevant decisions and events in `run-log.md`; Git preserves earlier states.
 
-## Local Git History
+Do not create reports for routine progress or information already preserved elsewhere in the task workspace. When a report is necessary, keep it concrete and detailed, place bulky raw output in a supporting artifact, and link to it instead of duplicating it.
 
-Commit automatically inside the task repository:
+## Task Workspace Git History
 
-- after creating the initial goal and approach;
-- after a meaningful phase, report, or agreed decision;
-- before yielding when meaningful changes remain uncommitted;
-- when finalizing the task workspace.
+Commit automatically in the task workspace's Git repository:
 
-Before committing, inspect the task repository status and diff, exclude unnecessary large files, and stage only task-repository files. Skip empty commits.
+- after completing a distinct phase or recording an agreed decision;
+- before yielding when changes remain uncommitted.
 
-Do not amend, squash, rebase, rewrite, or delete task history automatically. Do not add a remote or push.
+Review the task workspace's Git status and diff, then stage the intended changes. Skip empty commits.
 
-## Resume And Finish
+Preserve existing history; do not amend, squash, rebase, or delete commits automatically. Do not add a remote or push.
 
-When resuming, use an explicit task path when available. Otherwise inspect candidate `goal.md` files; do not assume the newest directory is correct. Before acting, read `goal.md`, `approach.md`, `run-log.md`, and the relevant reports.
+## Finish
 
 Before finishing:
 
-1. Make `goal.md` and `approach.md` reflect the current state.
-2. Write any required detailed report and final minute-precision log entry.
-3. Commit appropriate task artifacts and confirm the task repository is clean.
-4. Put final deliverables in the user-specified or project-appropriate path and report where they were placed.
+1. Confirm that `goal.md` and `approach.md` still match the current state; revise them only when the update threshold above is met.
+2. Update `run-log.md` only when a recovery-relevant decision or event remains unrecorded. Create or update a report only when it meets the report threshold above.
+3. Commit any remaining task workspace changes and confirm its Git working tree is clean.
+4. Put final deliverables in the user-specified or task-appropriate location, and report where they were placed.
