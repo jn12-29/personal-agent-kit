@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Code Developer"
+  short_description: "Develop clear, reliable code for experimental research"
+  default_prompt: "Use $research-code-developer to implement this research-code change while preserving experimental semantics and choosing proportionate validation."
