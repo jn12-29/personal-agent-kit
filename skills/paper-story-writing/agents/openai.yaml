@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paper Story Writing"
+  short_description: "Shape clear, persuasive stories for research papers"
+  default_prompt: "Use $paper-story-writing to strengthen this paper's core story, contribution positioning, and experimental narrative."
