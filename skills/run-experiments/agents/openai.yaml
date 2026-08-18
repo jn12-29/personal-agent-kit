@@ -1,4 +1,4 @@
 interface:
   display_name: "Run Experiments"
-  short_description: "Run and monitor experiments to verified results"
-  default_prompt: "Use $run-experiments to run and monitor this experiment through verified completion, including GPU-aware placement, adaptive scheduled checks, recovery when needed, durable goals for long runs, and detailed reporting."
+  short_description: "Run and wait for experiments through verification"
+  default_prompt: "Use $run-experiments to run, wait for, recover, and verify this experiment through a terminal state, using one durable Goal for clearly long runs and ETA-driven framework-native waiting within the current turn."
