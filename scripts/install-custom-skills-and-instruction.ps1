@@ -7,6 +7,11 @@ $repo = if ($env:AGENT_KIT_DIR) {
 } else {
     [System.IO.Path]::GetFullPath((Join-Path $scriptDir ".."))
 }
+$codexInstallDir = if ($env:CODEX_HOME) {
+    $env:CODEX_HOME
+} else {
+    Join-Path $HOME ".codex"
+}
 
 function Resolve-FullPath {
     param(
@@ -227,7 +232,7 @@ function Install-LinkOrCopy {
 Install-LinkOrCopy (Join-Path $repo "skills") (Join-Path $HOME ".agents/skills")
 
 # GLOBAL_AGENTS.md is installed into the supported tools' global instruction paths.
-Install-LinkOrCopy (Join-Path $repo "GLOBAL_AGENTS.md") (Join-Path $HOME ".codex/AGENTS.md")
+Install-LinkOrCopy (Join-Path $repo "GLOBAL_AGENTS.md") (Join-Path $codexInstallDir "AGENTS.md")
 Install-LinkOrCopy (Join-Path $repo "GLOBAL_AGENTS.md") (Join-Path $HOME ".config/opencode/AGENTS.md")
 
 Write-Output ""

@@ -5,6 +5,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="${AGENT_KIT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
+CODEX_INSTALL_DIR="${CODEX_HOME:-$HOME/.codex}"
 
 # link <真身> <链接位置> [备份目录]:已正确链接→跳过;已有内容→备份后再链;绝不删除
 link() {
@@ -70,7 +71,7 @@ link() {
 link "$REPO/skills" "$HOME/.agents/skills"
 
 # GLOBAL_AGENTS.md is installed into the supported tools' global instruction paths.
-link "$REPO/GLOBAL_AGENTS.md" "$HOME/.codex/AGENTS.md"
+link "$REPO/GLOBAL_AGENTS.md" "$CODEX_INSTALL_DIR/AGENTS.md"
 link "$REPO/GLOBAL_AGENTS.md" "$HOME/.config/opencode/AGENTS.md"
 
 echo

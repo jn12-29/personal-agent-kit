@@ -20,10 +20,11 @@ Set-Location personal-agent-kit
 powershell -ExecutionPolicy Bypass -File .\scripts\install-custom-skills-and-instruction.ps1
 ```
 
+The global installers use `CODEX_HOME` as `<Codex home>` when it is set and otherwise fall back to `~/.codex`.
 The installer backs up existing targets as `.bak.<timestamp>` and links:
 
 - `~/.agents/skills` -> `<repo>/skills`
-- `~/.codex/AGENTS.md` -> `<repo>/GLOBAL_AGENTS.md`
+- `<Codex home>/AGENTS.md` -> `<repo>/GLOBAL_AGENTS.md`
 - `~/.config/opencode/AGENTS.md` -> `<repo>/GLOBAL_AGENTS.md`
 
 ## Switch Profiles

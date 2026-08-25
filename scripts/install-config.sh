@@ -3,6 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="${AGENT_KIT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
+CODEX_INSTALL_DIR="${CODEX_HOME:-$HOME/.codex}"
 
 copy_config() {
   local src="$1" dst="$2"
@@ -17,5 +18,5 @@ copy_config() {
   echo "Installed: $dst <- $src"
 }
 
-copy_config "$REPO/config/config.toml" "$HOME/.codex/config.toml"
+copy_config "$REPO/config/config.toml" "$CODEX_INSTALL_DIR/config.toml"
 copy_config "$REPO/config/opencode.json" "$HOME/.config/opencode/opencode.json"

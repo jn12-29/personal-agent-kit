@@ -7,6 +7,11 @@ $repo = if ($env:AGENT_KIT_DIR) {
 } else {
     [System.IO.Path]::GetFullPath((Join-Path $scriptDir ".."))
 }
+$codexInstallDir = if ($env:CODEX_HOME) {
+    $env:CODEX_HOME
+} else {
+    Join-Path $HOME ".codex"
+}
 
 function Copy-Config {
     param(
@@ -36,5 +41,5 @@ function Copy-Config {
     Write-Output "Installed: $Destination <- $Source"
 }
 
-Copy-Config (Join-Path $repo "config/config.toml") (Join-Path $HOME ".codex/config.toml")
+Copy-Config (Join-Path $repo "config/config.toml") (Join-Path $codexInstallDir "config.toml")
 Copy-Config (Join-Path $repo "config/opencode.json") (Join-Path $HOME ".config/opencode/opencode.json")
